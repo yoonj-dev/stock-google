@@ -1,6 +1,12 @@
 name = "stock-google"
 compatibility_date = "2024-09-23"
 
+routes = [
+  { pattern = "goog.on-tap.xyz", custom_domain = true },
+  { pattern = "googl.on-tap.xyz", custom_domain = true },
+  { pattern = "google.on-tap.xyz", custom_domain = true }
+]
+
 [assets]
 directory = "./dist"
 not_found_handling = "single-page-application"
