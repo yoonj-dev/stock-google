@@ -58,64 +58,52 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
 
   const isRegular = session === 'REGULAR';
 
-  // 2. Price & Change Calculations
-  const prevClose =
-    currentStock.regularMarketPreviousClose ||
-    currentStock.previousClose ||
-    currentStock.currentPrice ||
-    320.58;
-
-  // Latest executed price (Headline Price)
-  const latestPrice =
-    (session === 'POST' || session === 'OVERNIGHT'
-      ? currentStock.postMarketPrice || currentStock.extendedLastPrice || currentStock.currentPrice
-      : session === 'PRE'
-      ? currentStock.preMarketPrice || currentStock.extendedLastPrice || currentStock.currentPrice
-      : currentStock.regularMarketPrice || currentStock.currentPrice) || 317.94;
-
-  // Total change from previous close
-  const totalChange = prevClose > 0 ? latestPrice - prevClose : currentStock.change || 0;
-  const totalChangePercent = prevClose > 0 ? (totalChange / prevClose) * 100 : currentStock.changePercent || 0;
-  const isTotalPositive = totalChange >= 0;
-
-  // Regular market session figures
-  const regPrice = currentStock.regularMarketPrice || currentStock.regularLastPrice || latestPrice;
-  const regChange = prevClose > 0 ? regPrice - prevClose : currentStock.regularMarketChange || 0;
-  const regChangePercent = prevClose > 0 ? (regChange / prevClose) * 100 : currentStock.regularMarketChangePercent || 0;
+  // 2. Regular market session metrics (Always Regular Close vs Previous Close)
+  const regPrice = currentStock.regularMarketPrice || currentStock.regularLastPrice || currentStock.currentPrice;
+  const regPrevClose = currentStock.regularMarketPreviousClose || currentStock.previousClose || regPrice;
+  const regChange = currentStock.regularMarketChange != null ? currentStock.regularMarketChange : (regPrice - regPrevClose);
+  const regChangePercent = currentStock.regularMarketChangePercent != null ? currentStock.regularMarketChangePercent : (regPrevClose > 0 ? (regChange / regPrevClose) * 100 : 0);
   const isRegPositive = regChange >= 0;
 
-  // Extended session figures
-  const extPrice =
-    session === 'POST' || session === 'OVERNIGHT'
-      ? currentStock.postMarketPrice || currentStock.extendedLastPrice || latestPrice
-      : currentStock.preMarketPrice || currentStock.extendedLastPrice || latestPrice;
-  const extBase = session === 'PRE' ? prevClose : regPrice;
-  const extChange =
-    session === 'POST' && currentStock.postMarketChange != null
-      ? currentStock.postMarketChange
-      : session === 'PRE' && currentStock.preMarketChange != null
-      ? currentStock.preMarketChange
-      : extBase > 0
-      ? extPrice - extBase
-      : 0;
-  const extChangePercent =
-    session === 'POST' && currentStock.postMarketChangePercent != null
-      ? currentStock.postMarketChangePercent
-      : session === 'PRE' && currentStock.preMarketChangePercent != null
-      ? currentStock.preMarketChangePercent
-      : extBase > 0
-      ? (extChange / extBase) * 100
-      : 0;
-  const isExtPositive = extChange >= 0;
-  const hasExtendedDiff = Math.abs(extChange) >= 0.01;
+  // 3. Extended session metrics (Base is ALWAYS regPrice from the regular session)
+  const hasPre = currentStock.preMarketPrice != null && currentStock.preMarketPrice > 0;
+  const hasPost = currentStock.postMarketPrice != null && currentStock.postMarketPrice > 0;
 
-  // 3. 52-week position calculation
-  const low52 = currentStock.fiftyTwoWeekLow || 264.28;
+  let extPrice: number | null = null;
+  let extChange: number | null = null;
+  let extChangePercent: number | null = null;
+  let extLabel = '';
+
+  if (session === 'PRE' || (session === 'CLOSED' && hasPre && !hasPost)) {
+    extPrice = currentStock.preMarketPrice!;
+    extChange = currentStock.preMarketChange != null ? currentStock.preMarketChange : (extPrice - regPrice);
+    extChangePercent = currentStock.preMarketChangePercent != null ? currentStock.preMarketChangePercent : (regPrice > 0 ? (extChange / regPrice) * 100 : 0);
+    extLabel = '프리마켓';
+  } else if (session === 'POST' || session === 'OVERNIGHT' || (session === 'CLOSED' && hasPost)) {
+    extPrice = currentStock.postMarketPrice!;
+    extChange = currentStock.postMarketChange != null ? currentStock.postMarketChange : (extPrice - regPrice);
+    extChangePercent = currentStock.postMarketChangePercent != null ? currentStock.postMarketChangePercent : (regPrice > 0 ? (extChange / regPrice) * 100 : 0);
+    extLabel = session === 'OVERNIGHT' ? '야간장' : '애프터마켓';
+  }
+
+  // 4. Headline Selection: In extended session, display extended price and change against regular close!
+  const isExtendedActive = (session === 'PRE' || session === 'POST' || session === 'OVERNIGHT') && extPrice != null;
+
+  const headlinePrice = isExtendedActive ? extPrice! : regPrice;
+  const headlineChange = isExtendedActive ? extChange! : regChange;
+  const headlineChangePercent = isExtendedActive ? extChangePercent! : regChangePercent;
+  const isHeadlinePositive = headlineChange >= 0;
+
+  // Chart baseline for intraday mini chart
+  const chartBaseline = isExtendedActive ? regPrice : regPrevClose;
+
+  // 5. 52-week position calculation
+  const low52 = currentStock.fiftyTwoWeekLow || 267.67;
   const high52 = currentStock.fiftyTwoWeekHigh || 408.61;
-  const pos52 = Math.max(0, Math.min(100, ((latestPrice - low52) / (high52 - low52)) * 100));
+  const pos52 = Math.max(0, Math.min(100, ((headlinePrice - low52) / (high52 - low52)) * 100));
 
   const targetMean = currentStock.targetMeanPrice || 429.12;
-  const upsidePercent = latestPrice > 0 ? (((targetMean - latestPrice) / latestPrice) * 100).toFixed(1) : '35.0';
+  const upsidePercent = headlinePrice > 0 ? (((targetMean - headlinePrice) / headlinePrice) * 100).toFixed(1) : '35.0';
 
   // Session Badge Config
   const sessionConfig: Record<MarketSession, { label: string; dotColor: string; badgeBg: string }> = {
@@ -222,85 +210,96 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
                 <span className={`w-1.5 h-1.5 rounded-full ${sessionConfig[session].dotColor}`} />
                 <span>{sessionConfig[session].label}</span>
               </span>
+
+              {isExtendedActive && (
+                <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+                  {extLabel} 체결가
+                </span>
+              )}
             </div>
 
-            {/* Headline Price & Total Change from Previous Close */}
+            {/* Headline Price & Session Change */}
             <div className="flex items-baseline gap-2.5 sm:gap-3 flex-wrap">
               <span className="text-3xl sm:text-4xl font-black font-mono tracking-tight text-slate-900 dark:text-white tabular-nums">
-                {formatCurrency(latestPrice)}
+                {formatCurrency(headlinePrice)}
               </span>
 
               <div
                 className={`flex items-center gap-1 text-sm sm:text-base font-bold font-mono ${
-                  isTotalPositive
+                  isHeadlinePositive
                     ? 'text-emerald-600 dark:text-emerald-400'
                     : 'text-rose-600 dark:text-rose-400'
                 }`}
               >
-                {isTotalPositive ? (
+                {isHeadlinePositive ? (
                   <TrendingUp className="w-4 h-4 stroke-[2.5]" />
                 ) : (
                   <TrendingDown className="w-4 h-4 stroke-[2.5]" />
                 )}
                 <span>
-                  {totalChange > 0 ? '+' : ''}
-                  {formatCurrency(totalChange)}
+                  {headlineChange > 0 ? '+' : ''}
+                  {formatCurrency(headlineChange)}
                 </span>
-                <span>({formatPercent(totalChangePercent)})</span>
+                <span>({formatPercent(headlineChangePercent)})</span>
               </div>
             </div>
 
-            {/* Sub-line: Regular Session Close vs Extended Market Breakdown */}
-            {!isRegular ? (
-              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap text-[11px] sm:text-xs text-slate-500 dark:text-zinc-400 font-mono">
-                <span className="text-slate-400 dark:text-zinc-400 font-sans">
-                  {session === 'PRE' ? '전일 종가' : '정규장 종가'}
-                </span>
+            {/* Sub-line: Unambiguous Breakdown between Regular Market & Extended Market */}
+            {isExtendedActive ? (
+              <div className="flex items-center gap-2 flex-wrap text-xs text-slate-500 dark:text-zinc-400 font-mono">
+                <span className="font-sans text-slate-400 dark:text-zinc-400">정규장 마감 종가:</span>
                 <span className="font-bold text-slate-800 dark:text-zinc-200">
-                  {formatCurrency(session === 'PRE' ? prevClose : regPrice)}
+                  {formatCurrency(regPrice)}
                 </span>
-                {session !== 'PRE' && (
-                  <span
-                    className={`font-semibold ${
-                      isRegPositive
-                        ? 'text-emerald-600 dark:text-emerald-400'
-                        : 'text-rose-600 dark:text-rose-400'
-                    }`}
-                  >
-                    ({isRegPositive ? '+' : ''}{regChangePercent.toFixed(2)}%)
-                  </span>
-                )}
-
-                {hasExtendedDiff && (
+                <span
+                  className={`font-semibold ${
+                    isRegPositive
+                      ? 'text-emerald-600 dark:text-emerald-400'
+                      : 'text-rose-600 dark:text-rose-400'
+                  }`}
+                >
+                  ({isRegPositive ? '+' : ''}{formatCurrency(regChange)}, {isRegPositive ? '+' : ''}{regChangePercent.toFixed(2)}%)
+                </span>
+                <span className="text-slate-300 dark:text-zinc-700">·</span>
+                <span className="font-sans text-slate-400 dark:text-zinc-400">{extLabel} 변동:</span>
+                <span
+                  className={`font-semibold ${
+                    isHeadlinePositive
+                      ? 'text-emerald-600 dark:text-emerald-400'
+                      : 'text-rose-600 dark:text-rose-400'
+                  }`}
+                >
+                  {isHeadlinePositive ? '+' : ''}{formatCurrency(headlineChange)} ({isHeadlinePositive ? '+' : ''}{headlineChangePercent.toFixed(2)}%)
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-[11px] sm:text-xs text-slate-500 dark:text-zinc-400 font-mono">
+                <span className="font-sans text-slate-400 dark:text-zinc-400 font-sans">전일 종가</span>
+                <span className="font-semibold text-slate-700 dark:text-zinc-200">
+                  {formatCurrency(regPrevClose)}
+                </span>
+                <span className="text-slate-300 dark:text-zinc-700">·</span>
+                <span className="font-sans text-slate-400 dark:text-zinc-400 font-sans">일중 범위</span>
+                <span className="text-slate-600 dark:text-zinc-300">
+                  {formatCurrency(currentStock.dayLow || regPrice * 0.99)} ~{' '}
+                  {formatCurrency(currentStock.dayHigh || regPrice * 1.01)}
+                </span>
+                {extPrice != null && (
                   <>
                     <span className="text-slate-300 dark:text-zinc-700">·</span>
-                    <span className="text-slate-400 dark:text-zinc-400 font-sans">
-                      {session === 'PRE' ? '프리마켓' : session === 'POST' ? '애프터마켓' : '야간장'}
-                    </span>
+                    <span className="font-sans text-slate-400 dark:text-zinc-400 font-sans">{extLabel}:</span>
                     <span
                       className={`font-semibold ${
-                        isExtPositive
+                        (extChange ?? 0) >= 0
                           ? 'text-emerald-600 dark:text-emerald-400'
                           : 'text-rose-600 dark:text-rose-400'
                       }`}
                     >
-                      {isExtPositive ? '+' : ''}{formatCurrency(extChange)} ({isExtPositive ? '+' : ''}{extChangePercent.toFixed(2)}%)
+                      {formatCurrency(extPrice)} ({(extChange ?? 0) >= 0 ? '+' : ''}
+                      {(extChangePercent ?? 0).toFixed(2)}%)
                     </span>
                   </>
                 )}
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 text-[11px] sm:text-xs text-slate-500 dark:text-zinc-400 font-mono">
-                <span className="text-slate-400 dark:text-zinc-400 font-sans">전일 종가</span>
-                <span className="font-semibold text-slate-700 dark:text-zinc-200">
-                  {formatCurrency(prevClose)}
-                </span>
-                <span className="text-slate-300 dark:text-zinc-700">·</span>
-                <span className="text-slate-400 dark:text-zinc-400 font-sans">일중 범위</span>
-                <span className="text-slate-600 dark:text-zinc-300">
-                  {formatCurrency(currentStock.dayLow || latestPrice * 0.99)} ~{' '}
-                  {formatCurrency(currentStock.dayHigh || latestPrice * 1.01)}
-                </span>
               </div>
             )}
 
@@ -313,8 +312,8 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
           <div className="w-full sm:w-[260px] md:w-[300px] lg:w-[340px] shrink-0">
             <IntradayMiniChart
               candles={currentCandles}
-              previousClose={prevClose}
-              currentPrice={latestPrice}
+              previousClose={chartBaseline}
+              currentPrice={headlinePrice}
               symbol={activeTicker}
             />
           </div>
@@ -338,10 +337,10 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
           </div>
 
           <div className="flex items-center justify-between text-[11px] text-slate-400">
-            <span>전일 종가: {formatCurrency(prevClose)}</span>
+            <span>전일 종가: {formatCurrency(regPrevClose)}</span>
             <span>
-              일중 범위: {formatCurrency(currentStock.dayLow || latestPrice * 0.99)} ~{' '}
-              {formatCurrency(currentStock.dayHigh || latestPrice * 1.01)}
+              일중 범위: {formatCurrency(currentStock.dayLow || regPrice * 0.99)} ~{' '}
+              {formatCurrency(currentStock.dayHigh || regPrice * 1.01)}
             </span>
           </div>
         </div>

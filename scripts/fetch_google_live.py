@@ -137,6 +137,7 @@ def collect_ticker(ticker: str):
         print(f"[{ticker}] Info fetch warning: {e}")
 
     # Fallback to fast_info
+    fast = None
     try:
         fast = stock.fast_info
         if "regularMarketPrice" not in info or not info["regularMarketPrice"]:
@@ -148,14 +149,8 @@ def collect_ticker(ticker: str):
     except Exception:
         pass
 
-    # Determine market state and extended hours pricing
+    # Standard Market State & Exact Price Extraction
     raw_state = str(info.get("marketState", "")).upper()
-    reg_price = info.get("regularMarketPrice") or info.get("currentPrice", 0)
-    prev_close = info.get("regularMarketPreviousClose") or info.get("previousClose", reg_price)
-    post_price = info.get("postMarketPrice")
-    pre_price = info.get("preMarketPrice")
-
-    # Normalize market state
     if "REGULAR" in raw_state:
         market_state = "REGULAR"
     elif "POST" in raw_state:
@@ -167,7 +162,6 @@ def collect_ticker(ticker: str):
     elif "CLOSED" in raw_state:
         market_state = "CLOSED"
     else:
-        # Determine based on current NY time
         ny_now = datetime.now(ZoneInfo("America/New_York"))
         hour = ny_now.hour
         minute = ny_now.minute
@@ -187,36 +181,61 @@ def collect_ticker(ticker: str):
 
     info["marketState"] = market_state
 
-    # Select effective headline price (currentPrice)
-    if market_state in ["POST", "OVERNIGHT"] and post_price:
-        current_price = post_price
-        extended_last_price = post_price
-        extended_last_type = "POST"
-    elif market_state == "PRE" and pre_price:
-        current_price = pre_price
-        extended_last_price = pre_price
-        extended_last_type = "PRE"
-    elif post_price and not pre_price and market_state == "CLOSED":
-        # Keep latest postMarket trade on closed days
-        current_price = post_price
-        extended_last_price = post_price
-        extended_last_type = "POST"
+    # Regular session prices (Benchmark for day's trading: close vs previous close)
+    reg_price = round(float(info.get("regularMarketPrice") or (getattr(fast, "last_price", 0) if fast else 0) or info.get("currentPrice", 0)), 2)
+    prev_close = round(float(info.get("regularMarketPreviousClose") or (getattr(fast, "previous_close", 0) if fast else 0) or info.get("previousClose", reg_price)), 2)
+    reg_change = round(float(info.get("regularMarketChange") or (reg_price - prev_close)), 2)
+    reg_change_pct = round(float(info.get("regularMarketChangePercent") or (((reg_price - prev_close) / prev_close) * 100 if prev_close else 0)), 2)
+
+    info["regularMarketPrice"] = reg_price
+    info["regularMarketChange"] = reg_change
+    info["regularMarketChangePercent"] = reg_change_pct
+    info["regularMarketPreviousClose"] = prev_close
+    info["regularLastPrice"] = reg_price
+    info["previousClose"] = prev_close
+
+    # Pre-market pricing (Base is ALWAYS reg_price from the regular session)
+    pre_price = round(float(info["preMarketPrice"]), 2) if info.get("preMarketPrice") else None
+    if pre_price:
+        pre_change = round(float(info.get("preMarketChange") if info.get("preMarketChange") is not None else (pre_price - reg_price)), 2)
+        pre_change_pct = round(float(info.get("preMarketChangePercent") if info.get("preMarketChangePercent") is not None else (((pre_price - reg_price) / reg_price) * 100 if reg_price else 0)), 2)
+        info["preMarketPrice"] = pre_price
+        info["preMarketChange"] = pre_change
+        info["preMarketChangePercent"] = pre_change_pct
+
+    # Post-market pricing (Base is ALWAYS reg_price from the regular session)
+    post_price = round(float(info["postMarketPrice"]), 2) if info.get("postMarketPrice") else None
+    if post_price:
+        post_change = round(float(info.get("postMarketChange") if info.get("postMarketChange") is not None else (post_price - reg_price)), 2)
+        post_change_pct = round(float(info.get("postMarketChangePercent") if info.get("postMarketChangePercent") is not None else (((post_price - reg_price) / reg_price) * 100 if reg_price else 0)), 2)
+        info["postMarketPrice"] = post_price
+        info["postMarketChange"] = post_change
+        info["postMarketChangePercent"] = post_change_pct
+
+    # Active Session Assignment: headline price reflects active session
+    if market_state == "PRE" and pre_price:
+        info["currentPrice"] = pre_price
+        info["change"] = pre_change
+        info["changePercent"] = pre_change_pct
+        info["extendedLastPrice"] = pre_price
+        info["extendedLastType"] = "PRE"
+    elif market_state in ["POST", "OVERNIGHT"] and post_price:
+        info["currentPrice"] = post_price
+        info["change"] = post_change
+        info["changePercent"] = post_change_pct
+        info["extendedLastPrice"] = post_price
+        info["extendedLastType"] = "POST"
     else:
-        current_price = reg_price
-        extended_last_price = post_price or pre_price or None
-        extended_last_type = "POST" if post_price else ("PRE" if pre_price else None)
-
-    info["currentPrice"] = round(float(current_price), 2)
-    info["regularLastPrice"] = round(float(reg_price), 2)
-    info["previousClose"] = round(float(prev_close), 2)
-    if extended_last_price:
-        info["extendedLastPrice"] = round(float(extended_last_price), 2)
-        info["extendedLastType"] = extended_last_type
-
-    # Ensure total change from previous close
-    if current_price and prev_close:
-        info["change"] = round(current_price - prev_close, 2)
-        info["changePercent"] = round(((current_price - prev_close) / prev_close) * 100, 2)
+        # REGULAR or CLOSED
+        info["currentPrice"] = reg_price
+        info["change"] = reg_change
+        info["changePercent"] = reg_change_pct
+        if post_price:
+            info["extendedLastPrice"] = post_price
+            info["extendedLastType"] = "POST"
+        elif pre_price:
+            info["extendedLastPrice"] = pre_price
+            info["extendedLastType"] = "PRE"
 
     # 2. Candles
     candles = {}

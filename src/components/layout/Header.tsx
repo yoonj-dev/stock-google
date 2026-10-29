@@ -89,6 +89,40 @@ export const Header: React.FC<HeaderProps> = ({
     window.open('https://brand-ui.on-tap.xyz/donate', '_blank', 'noopener,noreferrer');
   };
 
+  // Helper: Get active session price & tag for header ticker pill
+  const getHeaderTickerMetrics = (stock: StockFundamentals) => {
+    const state = (stock.marketState || '').toUpperCase();
+    if (state.includes('PRE') && stock.preMarketPrice) {
+      return {
+        price: stock.preMarketPrice,
+        changePercent: stock.preMarketChangePercent ?? stock.changePercent,
+        tag: 'PRE',
+      };
+    }
+    if (state.includes('POST') && stock.postMarketPrice) {
+      return {
+        price: stock.postMarketPrice,
+        changePercent: stock.postMarketChangePercent ?? stock.changePercent,
+        tag: 'POST',
+      };
+    }
+    if (state.includes('OVERNIGHT') && (stock.postMarketPrice || stock.preMarketPrice)) {
+      return {
+        price: stock.postMarketPrice || stock.preMarketPrice!,
+        changePercent: stock.postMarketChangePercent ?? stock.changePercent,
+        tag: '24H',
+      };
+    }
+    return {
+      price: stock.regularMarketPrice ?? stock.currentPrice,
+      changePercent: stock.regularMarketChangePercent ?? stock.changePercent,
+      tag: null,
+    };
+  };
+
+  const googlMetrics = getHeaderTickerMetrics(googl);
+  const googMetrics = getHeaderTickerMetrics(goog);
+
   const renderThemePill = (mode: Theme, label: string, icon: React.ReactNode) => {
     const isSelected = currentTheme === mode;
     return (
@@ -218,13 +252,18 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <span>GOOGL</span>
-            <span className="font-mono">{formatCurrency(googl.currentPrice)}</span>
+            {googlMetrics.tag && (
+              <span className="text-[9.5px] px-1 py-0.2 rounded bg-amber-500/15 text-amber-700 dark:text-amber-400 font-mono font-bold">
+                {googlMetrics.tag}
+              </span>
+            )}
+            <span className="font-mono">{formatCurrency(googlMetrics.price)}</span>
             <span
               className={`font-mono text-[11px] font-semibold ${
-                googl.changePercent >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+                googlMetrics.changePercent >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
               }`}
             >
-              {formatPercent(googl.changePercent)}
+              {formatPercent(googlMetrics.changePercent)}
             </span>
           </button>
 
@@ -238,13 +277,18 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <span>GOOG</span>
-            <span className="font-mono">{formatCurrency(goog.currentPrice)}</span>
+            {googMetrics.tag && (
+              <span className="text-[9.5px] px-1 py-0.2 rounded bg-amber-500/15 text-amber-700 dark:text-amber-400 font-mono font-bold">
+                {googMetrics.tag}
+              </span>
+            )}
+            <span className="font-mono">{formatCurrency(googMetrics.price)}</span>
             <span
               className={`font-mono text-[11px] font-semibold ${
-                goog.changePercent >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+                googMetrics.changePercent >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
               }`}
             >
-              {formatPercent(goog.changePercent)}
+              {formatPercent(googMetrics.changePercent)}
             </span>
           </button>
         </div>
