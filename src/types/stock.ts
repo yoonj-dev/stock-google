@@ -129,13 +129,16 @@ export interface LlmSynthesisData {
     model: string;
     googl_price: number;
     goog_price: number;
-    spread_diff: number;
-    spread_percent: number;
-    verdict: 'BUY_GOOGL' | 'BUY_GOOG' | 'BALANCED';
+    target_mean?: number;
+    target_high?: number;
+    target_low?: number;
+    forward_pe?: number;
+    recommendation?: string;
   };
   reports: {
     memo: string;
-    arbitrage: string;
+    ai_cloud: string;
+    regulatory: string;
     valuation: string;
   };
 }

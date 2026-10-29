@@ -1,28 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/layout/Header';
-import { DualTickerHero } from './components/dashboard/DualTickerHero';
+import { AlphabetStockHero } from './components/dashboard/AlphabetStockHero';
 import { LocalLlmSynthesizer } from './components/dashboard/LocalLlmSynthesizer';
 import { TradingViewSection } from './components/dashboard/TradingViewSection';
 import { AlphabetSixPillars } from './components/dashboard/AlphabetSixPillars';
 import { ValuationCalculator } from './components/dashboard/ValuationCalculator';
 import { Footer } from './components/layout/Footer';
-import { SpreadExplainerModal } from './components/modals/SpreadExplainerModal';
 import { Theme, getInitialTheme, applyThemeToDom } from './lib/theme';
-import { fetchStockData, calculateSpread } from './lib/stockApi';
+import { fetchStockData } from './lib/stockApi';
 import { MOCK_GOOGL_DATA, MOCK_GOOG_DATA } from './data/mockSnapshot';
-import { StockFundamentals, SpreadAnalysis } from './types/stock';
+import { StockFundamentals } from './types/stock';
 
 export const App: React.FC = () => {
   const [currentTheme, setCurrentTheme] = useState<Theme>(getInitialTheme);
   const [googl, setGoogl] = useState<StockFundamentals>(MOCK_GOOGL_DATA.fundamentals);
   const [goog, setGoog] = useState<StockFundamentals>(MOCK_GOOG_DATA.fundamentals);
-  const [spread, setSpread] = useState<SpreadAnalysis>(() =>
-    calculateSpread(MOCK_GOOGL_DATA.fundamentals, MOCK_GOOG_DATA.fundamentals)
-  );
-
   const [activeChartTicker, setActiveChartTicker] = useState<'GOOGL' | 'GOOG'>('GOOGL');
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [isSpreadModalOpen, setIsSpreadModalOpen] = useState<boolean>(false);
 
   // Sync theme to DOM on mount
   useEffect(() => {
@@ -40,12 +34,6 @@ export const App: React.FC = () => {
 
       if (googlData?.fundamentals) setGoogl(googlData.fundamentals);
       if (googData?.fundamentals) setGoog(googData.fundamentals);
-
-      const calculated = calculateSpread(
-        googlData?.fundamentals || googl,
-        googData?.fundamentals || goog
-      );
-      setSpread(calculated);
     } catch (err) {
       console.warn('[App] Failed to refresh live data:', err);
     } finally {
@@ -68,29 +56,26 @@ export const App: React.FC = () => {
         onThemeChanged={setCurrentTheme}
         googl={googl}
         goog={goog}
-        spread={spread}
+        activeTicker={activeChartTicker}
+        onSelectTicker={setActiveChartTicker}
         isRefreshing={isRefreshing}
         onRefresh={loadData}
-        onOpenSpreadExplainer={() => setIsSpreadModalOpen(true)}
       />
 
       {/* 2. Main Dashboard Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 lg:px-6 py-5 sm:py-6 space-y-6">
-        {/* Dual Hero: GOOGL (Class A) vs GOOG (Class C) + Spread Gauge */}
-        <DualTickerHero
+        {/* Executive Alphabet Investor Hero (GOOGL / GOOG Ticker Switcher & Key Fundamentals) */}
+        <AlphabetStockHero
           googl={googl}
           goog={goog}
-          spread={spread}
-          onSelectTickerForChart={setActiveChartTicker}
-          activeChartTicker={activeChartTicker}
-          onOpenSpreadExplainer={() => setIsSpreadModalOpen(true)}
+          activeTicker={activeChartTicker}
+          onSelectTicker={setActiveChartTicker}
         />
 
         {/* Local LLM Synthesis Station (Pre-compiled via PC Pipeline) */}
         <LocalLlmSynthesizer
           googl={googl}
           goog={goog}
-          spread={spread}
         />
 
         {/* TradingView Chart & Multi-Perspective Analysis Suite */}
@@ -109,13 +94,6 @@ export const App: React.FC = () => {
 
       {/* 3. Global Footer */}
       <Footer />
-
-      {/* Modals */}
-      <SpreadExplainerModal
-        isOpen={isSpreadModalOpen}
-        onClose={() => setIsSpreadModalOpen(false)}
-        spread={spread}
-      />
     </div>
   );
 };

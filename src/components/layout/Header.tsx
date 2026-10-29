@@ -1,28 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  Menu,
+  MoreVertical,
   Sun,
   Moon,
   Beer,
   ExternalLink,
-  Cpu,
   RefreshCw,
-  Sparkles,
-  HelpCircle,
 } from 'lucide-react';
-import { Theme, toggleTheme } from '../../lib/theme';
+import { Theme, applyThemeToDom } from '../../lib/theme';
 import { formatCurrency, formatPercent } from '../../lib/stockApi';
-import { StockFundamentals, SpreadAnalysis } from '../../types/stock';
+import { StockFundamentals } from '../../types/stock';
 
 interface HeaderProps {
   currentTheme: Theme;
   onThemeChanged: (theme: Theme) => void;
   googl: StockFundamentals;
   goog: StockFundamentals;
-  spread: SpreadAnalysis;
+  activeTicker: 'GOOGL' | 'GOOG';
+  onSelectTicker: (t: 'GOOGL' | 'GOOG') => void;
   isRefreshing: boolean;
   onRefresh: () => void;
-  onOpenSpreadExplainer: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -30,10 +27,10 @@ export const Header: React.FC<HeaderProps> = ({
   onThemeChanged,
   googl,
   goog,
-  spread,
+  activeTicker,
+  onSelectTicker,
   isRefreshing,
   onRefresh,
-  onOpenSpreadExplainer,
 }) => {
   // Rule 5: Responsive dropdown target separation to avoid dual mount collisions
   const [menuTarget, setMenuTarget] = useState<'mobile' | 'desktop' | null>(null);
@@ -62,49 +59,67 @@ export const Header: React.FC<HeaderProps> = ({
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [menuTarget]);
 
+  // Ground Truth Toggle
   const handleToggleTheme = () => {
-    const next = toggleTheme();
+    const isDark = document.documentElement.classList.contains('dark');
+    const next: Theme = isDark ? 'light' : 'dark';
     onThemeChanged(next);
+    applyThemeToDom(next);
   };
 
+  const handleSelectThemeMode = (mode: Theme) => {
+    onThemeChanged(mode);
+    applyThemeToDom(mode);
+    setMenuTarget(null);
+  };
+
+  // Rule 2: Open donate modal via BrandUI or fallback
   const handleOpenDonate = () => {
     setMenuTarget(null);
-    if (typeof window !== 'undefined') {
-      const brandUi = (window as any).BrandUI;
-      if (brandUi && typeof brandUi.openDonate === 'function') {
-        brandUi.openDonate();
-        return;
-      }
-      const beerBtn = document.getElementById('beer-btn');
-      if (beerBtn) {
-        beerBtn.click();
-        return;
-      }
-      window.open('https://brand-ui.on-tap.xyz/donate', '_blank', 'noopener,noreferrer');
+    if ((window as any).BrandUI?.openDonate) {
+      (window as any).BrandUI.openDonate();
+      return;
     }
+    const beerBtn = document.getElementById('beer-btn');
+    if (beerBtn) {
+      beerBtn.click();
+      return;
+    }
+    window.open('https://brand-ui.on-tap.xyz/donate', '_blank', 'noopener,noreferrer');
   };
 
-  const renderDropdownContent = () => (
-    <div className="py-1 text-xs text-slate-700 dark:text-zinc-200 divide-y divide-slate-100 dark:divide-zinc-800">
-      {/* App Quick Controls */}
-      <div className="p-2 space-y-1">
-        <button
-          onClick={handleToggleTheme}
-          className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors text-left"
-        >
-          <span className="flex items-center gap-2">
-            {currentTheme === 'dark' ? (
-              <Sun className="w-4 h-4 text-amber-400" />
-            ) : (
-              <Moon className="w-4 h-4 text-slate-600" />
-            )}
-            <span>테마 전환</span>
-          </span>
-          <span className="text-[11px] font-mono text-slate-400 dark:text-zinc-400 uppercase">
-            {currentTheme}
-          </span>
-        </button>
+  const renderThemePill = (mode: Theme, label: string, icon: React.ReactNode) => {
+    const isSelected = currentTheme === mode;
+    return (
+      <button
+        onClick={() => handleSelectThemeMode(mode)}
+        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          isSelected
+            ? 'bg-blue-600 text-white font-bold shadow-xs'
+            : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'
+        }`}
+      >
+        {icon}
+        <span>{label}</span>
+      </button>
+    );
+  };
 
+  const renderDropdownMenu = () => (
+    <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-xl z-50 p-2 text-xs divide-y divide-slate-100 dark:divide-zinc-800 animate-in fade-in slide-in-from-top-2 duration-150">
+      {/* Theme Selector */}
+      <div className="p-2 space-y-1.5">
+        <div className="text-[10px] font-semibold text-slate-400 dark:text-zinc-400 uppercase tracking-wider">
+          테마 모드 설정
+        </div>
+        <div className="grid grid-cols-2 gap-1 bg-slate-100 dark:bg-zinc-950 p-1 rounded-xl">
+          {renderThemePill('light', '라이트', <Sun className="w-3.5 h-3.5" />)}
+          {renderThemePill('dark', '다크', <Moon className="w-3.5 h-3.5" />)}
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="p-2 space-y-1">
         <button
           onClick={() => {
             setMenuTarget(null);
@@ -116,19 +131,6 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="flex items-center gap-2">
             <RefreshCw className={`w-4 h-4 text-blue-500 ${isRefreshing ? 'animate-spin' : ''}`} />
             <span>실시간 시세 갱신</span>
-          </span>
-        </button>
-
-        <button
-          onClick={() => {
-            setMenuTarget(null);
-            onOpenSpreadExplainer();
-          }}
-          className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors text-left"
-        >
-          <span className="flex items-center gap-2">
-            <HelpCircle className="w-4 h-4 text-purple-500" />
-            <span>Class A vs C 가이드</span>
           </span>
         </button>
       </div>
@@ -150,31 +152,33 @@ export const Header: React.FC<HeaderProps> = ({
           href="https://dev.on-tap.xyz"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300 transition-colors"
+          className="flex items-center justify-between px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-200 transition-colors"
         >
           <span className="flex items-center gap-2">
-            <ExternalLink className="w-4 h-4 text-blue-500" />
             <span>🚀 개발자 페이지 (On Tap)</span>
           </span>
+          <ExternalLink className="w-3.5 h-3.5 opacity-60" />
         </a>
       </div>
     </div>
   );
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-[#09090b]/85 border-b border-slate-200 dark:border-zinc-800 transition-colors safe-top">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 h-15 flex items-center justify-between gap-2">
-        {/* Left: Brand Identity with 4-Color Prism */}
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md transition-colors">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 h-16 flex items-center justify-between gap-4">
+        {/* Left: Brand Identity */}
         <div className="flex items-center gap-3">
           <a href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-slate-900 dark:bg-zinc-900 border border-slate-200/50 dark:border-white/10 flex items-center justify-center shadow-sm relative overflow-hidden group-hover:scale-105 transition-transform">
-              {/* Google 4-color micro ring */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-[#4285F4]/20 via-[#34A853]/20 to-[#EA4335]/20 opacity-80" />
-              <img src="/favicon.svg" alt="Alphabet on Tap" className="w-6 h-6 relative z-10" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#4285F4] via-[#EA4335] to-[#FBBC05] p-0.5 shadow-sm group-hover:scale-105 transition-transform shrink-0">
+              <div className="w-full h-full bg-white dark:bg-zinc-900 rounded-[10px] flex items-center justify-center">
+                <span className="text-base font-black bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#34A853] bg-clip-text text-transparent">
+                  G
+                </span>
+              </div>
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">
+                <span className="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">
                   Alphabet
                 </span>
                 <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
@@ -182,20 +186,25 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </div>
               <p className="text-[10.5px] font-mono text-slate-400 dark:text-zinc-400 hidden sm:block">
-                GOOGL · GOOG DUAL INTELLIGENCE
+                ALPHABET (GOOGL · GOOG) INVESTOR HUB
               </p>
             </div>
           </a>
         </div>
 
-        {/* Center: Live Dual Ticker Tickerbar */}
-        <div className="hidden md:flex items-center gap-3 bg-slate-100/80 dark:bg-zinc-900/80 px-3 py-1.5 rounded-xl border border-slate-200/60 dark:border-zinc-800 text-xs">
+        {/* Center: Live Tickers Pill (Clickable Ticker Switch) */}
+        <div className="hidden md:flex items-center gap-2 bg-slate-100/80 dark:bg-zinc-900/80 p-1 rounded-xl border border-slate-200/60 dark:border-zinc-800 text-xs">
           {/* GOOGL */}
-          <div className="flex items-center gap-1.5">
-            <span className="font-bold text-slate-900 dark:text-zinc-100">GOOGL</span>
-            <span className="font-mono text-slate-500 dark:text-zinc-400">
-              {formatCurrency(googl.currentPrice)}
-            </span>
+          <button
+            onClick={() => onSelectTicker('GOOGL')}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all ${
+              activeTicker === 'GOOGL'
+                ? 'bg-white dark:bg-zinc-800 text-blue-600 dark:text-blue-400 font-bold shadow-xs'
+                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <span>GOOGL</span>
+            <span className="font-mono">{formatCurrency(googl.currentPrice)}</span>
             <span
               className={`font-mono text-[11px] font-semibold ${
                 googl.changePercent >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
@@ -203,16 +212,19 @@ export const Header: React.FC<HeaderProps> = ({
             >
               {formatPercent(googl.changePercent)}
             </span>
-          </div>
-
-          <span className="text-slate-300 dark:text-zinc-700">|</span>
+          </button>
 
           {/* GOOG */}
-          <div className="flex items-center gap-1.5">
-            <span className="font-bold text-slate-900 dark:text-zinc-100">GOOG</span>
-            <span className="font-mono text-slate-500 dark:text-zinc-400">
-              {formatCurrency(goog.currentPrice)}
-            </span>
+          <button
+            onClick={() => onSelectTicker('GOOG')}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all ${
+              activeTicker === 'GOOG'
+                ? 'bg-white dark:bg-zinc-800 text-blue-600 dark:text-blue-400 font-bold shadow-xs'
+                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <span>GOOG</span>
+            <span className="font-mono">{formatCurrency(goog.currentPrice)}</span>
             <span
               className={`font-mono text-[11px] font-semibold ${
                 goog.changePercent >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
@@ -220,19 +232,6 @@ export const Header: React.FC<HeaderProps> = ({
             >
               {formatPercent(goog.changePercent)}
             </span>
-          </div>
-
-          <span className="text-slate-300 dark:text-zinc-700">|</span>
-
-          {/* Spread */}
-          <button
-            onClick={onOpenSpreadExplainer}
-            className="flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-colors"
-          >
-            <Sparkles className="w-3 h-3 text-blue-500" />
-            <span>스프레드: </span>
-            <span className="font-mono font-bold">+{spread.percentSpread}%</span>
-            <span className="text-[10px] text-slate-400">(${spread.dollarDiff})</span>
           </button>
         </div>
 
@@ -261,38 +260,17 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* Desktop ⋯ Context Menu (Rule 1 & 5) */}
-          <div className="relative hidden md:block" ref={desktopMenuRef}>
+          {/* Rule 1: Mandatory ⋯ (3-dot) Context Menu button */}
+          <div className="relative" ref={desktopMenuRef}>
             <button
+              onClick={() => setMenuTarget(menuTarget === 'desktop' ? null : 'desktop')}
               data-brand-context-menu="true"
-              onClick={() => setMenuTarget((prev) => (prev === 'desktop' ? null : 'desktop'))}
               title="더보기 메뉴"
-              className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-200 font-bold transition-colors flex items-center gap-1"
+              className="p-2 rounded-lg border border-slate-200 dark:border-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
             >
-              <span className="text-sm font-mono tracking-widest">⋯</span>
+              <MoreVertical className="w-4 h-4" />
             </button>
-            {menuTarget === 'desktop' && (
-              <div className="absolute right-0 mt-2 w-64 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl shadow-slate-900/10 z-50 animate-in fade-in zoom-in-95 duration-100">
-                {renderDropdownContent()}
-              </div>
-            )}
-          </div>
-
-          {/* Mobile ⋯ Menu Button (Rule 1 & 5) */}
-          <div className="relative md:hidden" ref={mobileMenuRef}>
-            <button
-              data-brand-context-menu="true"
-              onClick={() => setMenuTarget((prev) => (prev === 'mobile' ? null : 'mobile'))}
-              title="메뉴"
-              className="p-2 rounded-lg border border-slate-200 dark:border-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-200 transition-colors"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            {menuTarget === 'mobile' && (
-              <div className="absolute right-0 mt-2 w-64 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl shadow-slate-900/10 z-50 animate-in fade-in zoom-in-95 duration-100">
-                {renderDropdownContent()}
-              </div>
-            )}
+            {menuTarget === 'desktop' && renderDropdownMenu()}
           </div>
         </div>
       </div>
