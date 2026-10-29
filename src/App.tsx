@@ -7,7 +7,6 @@ import { AlphabetSixPillars } from './components/dashboard/AlphabetSixPillars';
 import { ValuationCalculator } from './components/dashboard/ValuationCalculator';
 import { Footer } from './components/layout/Footer';
 import { SpreadExplainerModal } from './components/modals/SpreadExplainerModal';
-import { LlmSettingsModal } from './components/modals/LlmSettingsModal';
 import { Theme, getInitialTheme, applyThemeToDom } from './lib/theme';
 import { fetchStockData, calculateSpread } from './lib/stockApi';
 import { MOCK_GOOGL_DATA, MOCK_GOOG_DATA } from './data/mockSnapshot';
@@ -23,7 +22,6 @@ export const App: React.FC = () => {
 
   const [activeChartTicker, setActiveChartTicker] = useState<'GOOGL' | 'GOOG'>('GOOGL');
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [isLlmModalOpen, setIsLlmModalOpen] = useState<boolean>(false);
   const [isSpreadModalOpen, setIsSpreadModalOpen] = useState<boolean>(false);
 
   // Sync theme to DOM on mount
@@ -73,7 +71,6 @@ export const App: React.FC = () => {
         spread={spread}
         isRefreshing={isRefreshing}
         onRefresh={loadData}
-        onOpenLlmModal={() => setIsLlmModalOpen(true)}
         onOpenSpreadExplainer={() => setIsSpreadModalOpen(true)}
       />
 
@@ -89,12 +86,11 @@ export const App: React.FC = () => {
           onOpenSpreadExplainer={() => setIsSpreadModalOpen(true)}
         />
 
-        {/* Local LLM Synthesis Station (Real-time Local LLM 취합) */}
+        {/* Local LLM Synthesis Station (Pre-compiled via PC Pipeline) */}
         <LocalLlmSynthesizer
           googl={googl}
           goog={goog}
           spread={spread}
-          onOpenLlmModal={() => setIsLlmModalOpen(true)}
         />
 
         {/* TradingView Chart & Multi-Perspective Analysis Suite */}
@@ -119,12 +115,6 @@ export const App: React.FC = () => {
         isOpen={isSpreadModalOpen}
         onClose={() => setIsSpreadModalOpen(false)}
         spread={spread}
-      />
-
-      <LlmSettingsModal
-        isOpen={isLlmModalOpen}
-        onClose={() => setIsLlmModalOpen(false)}
-        onSaved={loadData}
       />
     </div>
   );

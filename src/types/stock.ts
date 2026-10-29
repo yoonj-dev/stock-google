@@ -120,3 +120,22 @@ export interface OllamaChatMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
 }
+
+export interface LlmSynthesisData {
+  metadata: {
+    last_updated: string;
+    last_updated_ny?: string;
+    engine: string;
+    model: string;
+    googl_price: number;
+    goog_price: number;
+    spread_diff: number;
+    spread_percent: number;
+    verdict: 'BUY_GOOGL' | 'BUY_GOOG' | 'BALANCED';
+  };
+  reports: {
+    memo: string;
+    arbitrage: string;
+    valuation: string;
+  };
+}

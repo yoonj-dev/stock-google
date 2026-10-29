@@ -22,7 +22,6 @@ interface HeaderProps {
   spread: SpreadAnalysis;
   isRefreshing: boolean;
   onRefresh: () => void;
-  onOpenLlmModal: () => void;
   onOpenSpreadExplainer: () => void;
 }
 
@@ -34,7 +33,6 @@ export const Header: React.FC<HeaderProps> = ({
   spread,
   isRefreshing,
   onRefresh,
-  onOpenLlmModal,
   onOpenSpreadExplainer,
 }) => {
   // Rule 5: Responsive dropdown target separation to avoid dual mount collisions
@@ -118,19 +116,6 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="flex items-center gap-2">
             <RefreshCw className={`w-4 h-4 text-blue-500 ${isRefreshing ? 'animate-spin' : ''}`} />
             <span>실시간 시세 갱신</span>
-          </span>
-        </button>
-
-        <button
-          onClick={() => {
-            setMenuTarget(null);
-            onOpenLlmModal();
-          }}
-          className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors text-left"
-        >
-          <span className="flex items-center gap-2">
-            <Cpu className="w-4 h-4 text-emerald-500" />
-            <span>로컬 LLM 설정 (Ollama)</span>
           </span>
         </button>
 

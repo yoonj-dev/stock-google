@@ -1,7 +1,22 @@
-import { StockData, StockFundamentals, SpreadAnalysis } from '../types/stock';
+import { StockData, StockFundamentals, SpreadAnalysis, LlmSynthesisData } from '../types/stock';
 import { MOCK_GOOGL_DATA, MOCK_GOOG_DATA } from '../data/mockSnapshot';
 
 const STOCK_API_BASE = 'https://stock-api.on-tap.xyz';
+
+export async function fetchSynthesisData(): Promise<LlmSynthesisData | null> {
+  try {
+    const res = await fetch(`/data/synthesis.json?t=${Date.now()}`);
+    if (res.ok) {
+      const data: LlmSynthesisData = await res.json();
+      if (data?.reports?.memo) {
+        return data;
+      }
+    }
+  } catch (err) {
+    console.warn('[stockApi] Failed to fetch static synthesis data:', err);
+  }
+  return null;
+}
 
 export async function fetchStockData(symbol: 'GOOGL' | 'GOOG'): Promise<StockData> {
   const fallback = symbol === 'GOOGL' ? MOCK_GOOGL_DATA : MOCK_GOOG_DATA;
