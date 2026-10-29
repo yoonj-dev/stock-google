@@ -33,14 +33,14 @@ export const ALPHABET_PILLARS: BusinessPillar[] = [
     category: 'High Growth Engine',
     color: 'from-emerald-500/20 to-emerald-600/5',
     dotColor: 'bg-[#34A853]',
-    badge: '연간 런레이트 $40B+',
+    badge: '연간 런레이트 $122.8B (Q3 $30.7B)',
     highlights: [
-      { label: '연간 매출 성장률', value: '+35.1%', change: 'YoY' },
-      { label: '클라우드 영업이익률', value: '11.8%', change: '흑자 전환' },
-      { label: 'Vertex AI 엔터프라이즈 고객', value: '수만 개 사' },
+      { label: 'Q3 분기 매출 성장률', value: '+103.0%', change: 'YoY ($30.7B)' },
+      { label: '클라우드 영업이익률', value: '36.2%', change: '$11.1B 달성' },
+      { label: 'Vertex AI 엔터프라이즈 도입', value: 'Fortune 500의 75%+' },
     ],
     summary:
-      '과거 적자 사업부에서 알파벳의 핵심 이익 성장 레버리지로 완벽히 탈바꿈했습니다. 독자 설계한 TPU 인프라와 Vertex AI 플랫폼을 기반으로 글로벌 포춘 500대 기업의 생성형 AI 워크로드를 흡수하고 있습니다.',
+      '2026 Q3 분기 매출 $30.7B(+103% YoY) 및 영업이익 $11.1B(마진 36.2%)를 달성하며 전사 최대 성장 엔진으로 자리잡았습니다. 독자 설계한 TPU Trillium과 Vertex AI 플랫폼을 기반으로 글로벌 엔터프라이즈의 생성형 AI 워크로드를 흡수하고 있습니다.',
     catalysts: [
       '엔터프라이즈 생성형 AI 파이프라인 수주 급증 및 대규모 장기 계약 체결',
       'TPU 기반의 압도적인 비용 효율성으로 AWS 및 Azure 대비 가격 경쟁력 확보',
@@ -58,10 +58,10 @@ export const ALPHABET_PILLARS: BusinessPillar[] = [
     category: 'Recurring Revenue',
     color: 'from-red-500/20 to-red-600/5',
     dotColor: 'bg-[#EA4335]',
-    badge: '구독자 1억 명 돌파',
+    badge: '구독자 1.5억 명 돌파',
     highlights: [
-      { label: 'Music & Premium 구독자', value: '100M+' },
-      { label: 'YouTube Shorts 일일 조회수', value: '700억 뷰+' },
+      { label: 'Music & Premium 구독자', value: '150M+' },
+      { label: 'Q3 분기 광고 매출', value: '$11.2B (+9% YoY)' },
       { label: '거실(Living Room) TV 시청 1위', value: 'Nielsen 인증' },
     ],
     summary:

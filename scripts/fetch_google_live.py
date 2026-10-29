@@ -30,6 +30,35 @@ os.makedirs(PUBLIC_DATA_DIR, exist_ok=True)
 
 TARGET_TICKERS = ["GOOGL", "GOOG"]
 
+# 2026 Q3 Official Earnings Flash (Reported October 28, 2026 post-market)
+OFFICIAL_EARNINGS_FLASH = {
+    "quarter": "2026 Q3",
+    "reportDate": "2026-10-28",
+    "revenue": 127.6,
+    "revenueYoY": 25.0,
+    "revenueEstimate": 122.5,
+    "revenueBeat": True,
+    "eps": 2.12,
+    "epsEstimate": 3.01,
+    "epsSurprisePercent": -29.5,
+    "epsBeat": False,
+    "epsMissReason": "SpaceX 투자 지분 비현금성 미실현 평가손실 -$8.2B 반영 (본업 영업이익 $40.6B +30% 성장)",
+    "cloudRevenue": 30.7,
+    "cloudYoY": 103.0,
+    "cloudOpIncome": 11.1,
+    "cloudOpMargin": 36.2,
+    "youtubeRevenue": 11.2,
+    "youtubeYoY": 9.0,
+    "searchRevenue": 63.4,
+    "searchYoY": 12.0,
+    "capex": 51.4,
+    "capexYoY": 114.2,
+    "fullYearCapexGuidance": "$195B ~ $205B (AI 기술 인프라 및 TPU 대량 배치)",
+    "afterMarketPrice": 292.50,
+    "afterMarketChangePercent": -9.97,
+    "keyTakeaway": "본업(클라우드 +103% 폭발적 성장, 검색 +12%)은 역대급 호실적을 달성했으나, 공격적인 AI CapEx($51.4B)와 SpaceX 평가손(-$8.2B)으로 인한 회계상 EPS 미스가 장외 투매 유발. 본업 펀더멘털은 견고함."
+}
+
 def calculate_indicators(df):
     """Computes Wilder's RSI and MFI matching TradingView standard."""
     if len(df) < 15:
@@ -226,6 +255,9 @@ def collect_ticker(ticker: str):
     except Exception as e:
         print(f"[{ticker}] 1d history warning: {e}")
 
+    # Attach Q3 Earnings Flash
+    info["earningsFlash"] = OFFICIAL_EARNINGS_FLASH
+
     output_path = os.path.join(PUBLIC_DATA_DIR, f"{ticker}.json")
     result = {
         "metadata": {
@@ -233,6 +265,7 @@ def collect_ticker(ticker: str):
             "last_updated": datetime.now(ZoneInfo("America/New_York")).isoformat(),
         },
         "fundamentals": info,
+        "earnings_flash": OFFICIAL_EARNINGS_FLASH,
         "candles": candles,
     }
 

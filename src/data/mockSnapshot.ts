@@ -1,4 +1,33 @@
-import { StockData } from '../types/stock';
+import { StockData, EarningsFlash } from '../types/stock';
+
+export const MOCK_EARNINGS_FLASH: EarningsFlash = {
+  quarter: '2026 Q3',
+  reportDate: '2026-10-28',
+  revenue: 127.6,
+  revenueYoY: 25.0,
+  revenueEstimate: 122.5,
+  revenueBeat: true,
+  eps: 2.12,
+  epsEstimate: 3.01,
+  epsSurprisePercent: -29.5,
+  epsBeat: false,
+  epsMissReason: 'SpaceX 투자 지분 비현금성 미실현 평가손실 -$8.2B 반영 (본업 영업이익 $40.6B +30% 성장)',
+  cloudRevenue: 30.7,
+  cloudYoY: 103.0,
+  cloudOpIncome: 11.1,
+  cloudOpMargin: 36.2,
+  youtubeRevenue: 11.2,
+  youtubeYoY: 9.0,
+  searchRevenue: 63.4,
+  searchYoY: 12.0,
+  capex: 51.4,
+  capexYoY: 114.2,
+  fullYearCapexGuidance: '$195B ~ $205B (AI 기술 인프라 및 TPU 대량 배치)',
+  afterMarketPrice: 292.50,
+  afterMarketChangePercent: -9.97,
+  keyTakeaway:
+    '본업(클라우드 +103% 폭발적 성장, 검색 +12%)은 역대급 호실적을 달성했으나, 공격적인 AI CapEx($51.4B)와 SpaceX 평가손(-$8.2B)으로 인한 회계상 EPS 미스가 장외 투매 유발. 본업 펀더멘털은 견고함.',
+};
 
 export const MOCK_GOOGL_DATA: StockData = {
   fundamentals: {
@@ -20,6 +49,7 @@ export const MOCK_GOOGL_DATA: StockData = {
     postMarketPrice: 292.50,
     postMarketChange: -32.39,
     postMarketChangePercent: -9.97,
+    earningsFlash: MOCK_EARNINGS_FLASH,
     marketCap: 3874443205169,
     trailingPE: 15.9,
     forwardPE: 20.63,
@@ -97,6 +127,7 @@ export const MOCK_GOOG_DATA: StockData = {
     postMarketPrice: 290.52,
     postMarketChange: -31.37,
     postMarketChangePercent: -9.75,
+    earningsFlash: MOCK_EARNINGS_FLASH,
     marketCap: 3842523254410,
     trailingPE: 15.8,
     forwardPE: 20.45,

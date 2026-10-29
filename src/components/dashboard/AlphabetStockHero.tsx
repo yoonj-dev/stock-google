@@ -12,6 +12,7 @@ import {
 import { StockFundamentals, Candle } from '../../types/stock';
 import { formatCurrency, formatLargeNumber, formatPercent } from '../../lib/stockApi';
 import { IntradayMiniChart } from './IntradayMiniChart';
+import { EarningsFlashBanner } from './EarningsFlashBanner';
 
 interface AlphabetStockHeroProps {
   googl: StockFundamentals;
@@ -147,6 +148,9 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
 
   return (
     <div className="w-full space-y-4">
+      {/* 🚨 2026 Q3 실적 속보 & 장외 긴급 진단 배너 */}
+      <EarningsFlashBanner flash={currentStock.earningsFlash} />
+
       {/* 1. Main Executive Header Card */}
       <div className="fintech-card p-4 sm:p-6 space-y-4 sm:space-y-5">
         {/* Top: Company Brand & Ticker Switcher */}
