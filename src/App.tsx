@@ -9,14 +9,17 @@ import { Footer } from './components/layout/Footer';
 import { Theme, getInitialTheme, applyThemeToDom } from './lib/theme';
 import { fetchStockData } from './lib/stockApi';
 import { MOCK_GOOGL_DATA, MOCK_GOOG_DATA } from './data/mockSnapshot';
-import { StockFundamentals } from './types/stock';
+import { StockData } from './types/stock';
 
 export const App: React.FC = () => {
   const [currentTheme, setCurrentTheme] = useState<Theme>(getInitialTheme);
-  const [googl, setGoogl] = useState<StockFundamentals>(MOCK_GOOGL_DATA.fundamentals);
-  const [goog, setGoog] = useState<StockFundamentals>(MOCK_GOOG_DATA.fundamentals);
+  const [googlData, setGooglData] = useState<StockData>(MOCK_GOOGL_DATA);
+  const [googData, setGoogData] = useState<StockData>(MOCK_GOOG_DATA);
   const [activeChartTicker, setActiveChartTicker] = useState<'GOOGL' | 'GOOG'>('GOOGL');
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  const googl = googlData.fundamentals;
+  const goog = googData.fundamentals;
 
   // Sync theme to DOM on mount
   useEffect(() => {
@@ -27,13 +30,13 @@ export const App: React.FC = () => {
   const loadData = async () => {
     setIsRefreshing(true);
     try {
-      const [googlData, googData] = await Promise.all([
+      const [gData, cData] = await Promise.all([
         fetchStockData('GOOGL'),
         fetchStockData('GOOG'),
       ]);
 
-      if (googlData?.fundamentals) setGoogl(googlData.fundamentals);
-      if (googData?.fundamentals) setGoog(googData.fundamentals);
+      if (gData?.fundamentals) setGooglData(gData);
+      if (cData?.fundamentals) setGoogData(cData);
     } catch (err) {
       console.warn('[App] Failed to refresh live data:', err);
     } finally {
@@ -70,6 +73,8 @@ export const App: React.FC = () => {
           goog={goog}
           activeTicker={activeChartTicker}
           onSelectTicker={setActiveChartTicker}
+          googlCandles={googlData.candles?.['1d_intraday']}
+          googCandles={googData.candles?.['1d_intraday']}
         />
 
         {/* Local LLM Synthesis Station (Pre-compiled via PC Pipeline) */}

@@ -5,50 +5,156 @@ import {
   Building2,
   DollarSign,
   ShieldCheck,
-  Zap,
   BarChart2,
   PieChart,
   Target,
-  Sparkles,
 } from 'lucide-react';
-import { StockFundamentals } from '../../types/stock';
+import { StockFundamentals, Candle } from '../../types/stock';
 import { formatCurrency, formatLargeNumber, formatPercent } from '../../lib/stockApi';
+import { IntradayMiniChart } from './IntradayMiniChart';
 
 interface AlphabetStockHeroProps {
   googl: StockFundamentals;
   goog: StockFundamentals;
   activeTicker: 'GOOGL' | 'GOOG';
   onSelectTicker: (ticker: 'GOOGL' | 'GOOG') => void;
+  googlCandles?: Candle[];
+  googCandles?: Candle[];
 }
+
+export type MarketSession = 'REGULAR' | 'POST' | 'PRE' | 'OVERNIGHT' | 'CLOSED';
 
 export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
   googl,
   goog,
   activeTicker,
   onSelectTicker,
+  googlCandles = [],
+  googCandles = [],
 }) => {
   const currentStock = activeTicker === 'GOOGL' ? googl : goog;
-  const isPositive = currentStock.changePercent >= 0;
+  const currentCandles = activeTicker === 'GOOGL' ? googlCandles : googCandles;
 
-  // 52-week position calculation
+  // 1. Determine Market Session State
+  const rawState = (currentStock.marketState || '').toUpperCase();
+  let session: MarketSession = 'CLOSED';
+  if (rawState.includes('REGULAR')) {
+    session = 'REGULAR';
+  } else if (rawState.includes('POST')) {
+    session = 'POST';
+  } else if (rawState.includes('PRE')) {
+    session = 'PRE';
+  } else if (rawState.includes('OVERNIGHT')) {
+    session = 'OVERNIGHT';
+  } else if (rawState.includes('CLOSED')) {
+    session = 'CLOSED';
+  } else {
+    // Check if post/pre price exists
+    if (currentStock.postMarketPrice) session = 'POST';
+    else if (currentStock.preMarketPrice) session = 'PRE';
+    else session = 'REGULAR';
+  }
+
+  const isRegular = session === 'REGULAR';
+
+  // 2. Price & Change Calculations
+  const prevClose =
+    currentStock.regularMarketPreviousClose ||
+    currentStock.previousClose ||
+    currentStock.currentPrice ||
+    320.58;
+
+  // Latest executed price (Headline Price)
+  const latestPrice =
+    (session === 'POST' || session === 'OVERNIGHT'
+      ? currentStock.postMarketPrice || currentStock.extendedLastPrice || currentStock.currentPrice
+      : session === 'PRE'
+      ? currentStock.preMarketPrice || currentStock.extendedLastPrice || currentStock.currentPrice
+      : currentStock.regularMarketPrice || currentStock.currentPrice) || 317.94;
+
+  // Total change from previous close
+  const totalChange = prevClose > 0 ? latestPrice - prevClose : currentStock.change || 0;
+  const totalChangePercent = prevClose > 0 ? (totalChange / prevClose) * 100 : currentStock.changePercent || 0;
+  const isTotalPositive = totalChange >= 0;
+
+  // Regular market session figures
+  const regPrice = currentStock.regularMarketPrice || currentStock.regularLastPrice || latestPrice;
+  const regChange = prevClose > 0 ? regPrice - prevClose : currentStock.regularMarketChange || 0;
+  const regChangePercent = prevClose > 0 ? (regChange / prevClose) * 100 : currentStock.regularMarketChangePercent || 0;
+  const isRegPositive = regChange >= 0;
+
+  // Extended session figures
+  const extPrice =
+    session === 'POST' || session === 'OVERNIGHT'
+      ? currentStock.postMarketPrice || currentStock.extendedLastPrice || latestPrice
+      : currentStock.preMarketPrice || currentStock.extendedLastPrice || latestPrice;
+  const extBase = session === 'PRE' ? prevClose : regPrice;
+  const extChange =
+    session === 'POST' && currentStock.postMarketChange != null
+      ? currentStock.postMarketChange
+      : session === 'PRE' && currentStock.preMarketChange != null
+      ? currentStock.preMarketChange
+      : extBase > 0
+      ? extPrice - extBase
+      : 0;
+  const extChangePercent =
+    session === 'POST' && currentStock.postMarketChangePercent != null
+      ? currentStock.postMarketChangePercent
+      : session === 'PRE' && currentStock.preMarketChangePercent != null
+      ? currentStock.preMarketChangePercent
+      : extBase > 0
+      ? (extChange / extBase) * 100
+      : 0;
+  const isExtPositive = extChange >= 0;
+  const hasExtendedDiff = Math.abs(extChange) >= 0.01;
+
+  // 3. 52-week position calculation
   const low52 = currentStock.fiftyTwoWeekLow || 264.28;
   const high52 = currentStock.fiftyTwoWeekHigh || 408.61;
-  const price = currentStock.currentPrice || 317.94;
-  const pos52 = Math.max(0, Math.min(100, ((price - low52) / (high52 - low52)) * 100));
+  const pos52 = Math.max(0, Math.min(100, ((latestPrice - low52) / (high52 - low52)) * 100));
 
   const targetMean = currentStock.targetMeanPrice || 429.12;
-  const upsidePercent = price > 0 ? (((targetMean - price) / price) * 100).toFixed(1) : '35.0';
+  const upsidePercent = latestPrice > 0 ? (((targetMean - latestPrice) / latestPrice) * 100).toFixed(1) : '35.0';
+
+  // Session Badge Config
+  const sessionConfig: Record<MarketSession, { label: string; dotColor: string; badgeBg: string }> = {
+    REGULAR: {
+      label: '정규장 실시간',
+      dotColor: 'bg-emerald-500 animate-pulse',
+      badgeBg: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400 border border-emerald-500/25',
+    },
+    POST: {
+      label: '애프터마켓 (시간외)',
+      dotColor: 'bg-amber-500 animate-pulse',
+      badgeBg: 'bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400 border border-amber-500/25',
+    },
+    PRE: {
+      label: '프리마켓 (개장전)',
+      dotColor: 'bg-amber-500 animate-pulse',
+      badgeBg: 'bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400 border border-amber-500/25',
+    },
+    OVERNIGHT: {
+      label: '야간장 (오버나이트 24H)',
+      dotColor: 'bg-indigo-500',
+      badgeBg: 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-400 border border-indigo-500/25',
+    },
+    CLOSED: {
+      label: '장마감',
+      dotColor: 'bg-slate-400 dark:bg-zinc-500',
+      badgeBg: 'bg-slate-100 text-slate-600 dark:bg-zinc-800 dark:text-zinc-400 border border-slate-200 dark:border-zinc-700',
+    },
+  };
 
   return (
     <div className="w-full space-y-4">
       {/* 1. Main Executive Header Card */}
-      <div className="fintech-card p-5 sm:p-6 space-y-5">
+      <div className="fintech-card p-4 sm:p-6 space-y-4 sm:space-y-5">
         {/* Top: Company Brand & Ticker Switcher */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-zinc-800">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3.5 pb-4 border-b border-slate-100 dark:border-zinc-800">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#4285F4] via-[#EA4335] to-[#FBBC05] p-0.5 shadow-md shrink-0">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-[#4285F4] via-[#EA4335] to-[#FBBC05] p-0.5 shadow-md shrink-0">
               <div className="w-full h-full bg-white dark:bg-zinc-900 rounded-[14px] flex items-center justify-center">
-                <span className="text-xl font-black bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#34A853] bg-clip-text text-transparent">
+                <span className="text-xl sm:text-2xl font-black bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#34A853] bg-clip-text text-transparent">
                   G
                 </span>
               </div>
@@ -62,14 +168,14 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
                   NASDAQ
                 </span>
               </div>
-              <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5 line-clamp-1 sm:line-clamp-none">
                 글로벌 검색(Search), 유튜브(YouTube), Google Cloud 및 Gemini AI 생태계를 이끄는 빅테크 지주회사
               </p>
             </div>
           </div>
 
           {/* Ticker Selector Switch */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 self-start md:self-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 self-start md:self-auto shrink-0">
             <div className="flex items-center bg-slate-100 dark:bg-zinc-900 p-1 rounded-xl border border-slate-200/80 dark:border-zinc-800 text-xs font-bold">
               <button
                 onClick={() => onSelectTicker('GOOGL')}
@@ -80,7 +186,7 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
                 }`}
               >
                 <span>GOOGL</span>
-                <span className="text-[10px] opacity-80 font-normal">(Class A · 의결권 1표)</span>
+                <span className="text-[10px] opacity-80 font-normal hidden xs:inline">(Class A · 의결권 1표)</span>
               </button>
 
               <button
@@ -92,79 +198,147 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
                 }`}
               >
                 <span>GOOG</span>
-                <span className="text-[10px] opacity-80 font-normal">(Class C · 무의결권)</span>
+                <span className="text-[10px] opacity-80 font-normal hidden xs:inline">(Class C · 무의결권)</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Middle: Live Price, Change & 52-Week Range */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
-          {/* Price & Change (5 Cols) */}
-          <div className="lg:col-span-5 space-y-2">
-            <div className="flex items-center gap-2">
+        {/* Middle: Live Price, Session State & 1D Intraday Mini-Chart (Circled Area) */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          {/* Left: Price, Badges & Extended Session Breakdown */}
+          <div className="min-w-0 flex-1 space-y-1.5 sm:space-y-2">
+            {/* Ticker & Market Session Badges */}
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs font-bold font-mono px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300">
                 {activeTicker} {activeTicker === 'GOOGL' ? 'Class A' : 'Class C'}
               </span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                정규장 실시간
+
+              <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-semibold ${sessionConfig[session].badgeBg}`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${sessionConfig[session].dotColor}`} />
+                <span>{sessionConfig[session].label}</span>
               </span>
             </div>
 
-            <div className="flex items-baseline gap-3">
-              <span className="text-3xl sm:text-4xl font-black font-mono tracking-tight text-slate-900 dark:text-white">
-                {formatCurrency(price)}
+            {/* Headline Price & Total Change from Previous Close */}
+            <div className="flex items-baseline gap-2.5 sm:gap-3 flex-wrap">
+              <span className="text-3xl sm:text-4xl font-black font-mono tracking-tight text-slate-900 dark:text-white tabular-nums">
+                {formatCurrency(latestPrice)}
               </span>
+
               <div
                 className={`flex items-center gap-1 text-sm sm:text-base font-bold font-mono ${
-                  isPositive
+                  isTotalPositive
                     ? 'text-emerald-600 dark:text-emerald-400'
                     : 'text-rose-600 dark:text-rose-400'
                 }`}
               >
-                {isPositive ? (
+                {isTotalPositive ? (
                   <TrendingUp className="w-4 h-4 stroke-[2.5]" />
                 ) : (
                   <TrendingDown className="w-4 h-4 stroke-[2.5]" />
                 )}
                 <span>
-                  {currentStock.change > 0 ? '+' : ''}
-                  {formatCurrency(currentStock.change)}
+                  {totalChange > 0 ? '+' : ''}
+                  {formatCurrency(totalChange)}
                 </span>
-                <span>({formatPercent(currentStock.changePercent)})</span>
+                <span>({formatPercent(totalChangePercent)})</span>
               </div>
             </div>
 
-            <p className="text-[11px] text-slate-400 dark:text-zinc-400">
-              * 알파벳은 의결권 유무에 따라 GOOGL과 GOOG로 나뉘며, 동일한 기업 실적 및 현금흐름 지분을 갖습니다.
+            {/* Sub-line: Regular Session Close vs Extended Market Breakdown */}
+            {!isRegular ? (
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap text-[11px] sm:text-xs text-slate-500 dark:text-zinc-400 font-mono">
+                <span className="text-slate-400 dark:text-zinc-400 font-sans">
+                  {session === 'PRE' ? '전일 종가' : '정규장 종가'}
+                </span>
+                <span className="font-bold text-slate-800 dark:text-zinc-200">
+                  {formatCurrency(session === 'PRE' ? prevClose : regPrice)}
+                </span>
+                {session !== 'PRE' && (
+                  <span
+                    className={`font-semibold ${
+                      isRegPositive
+                        ? 'text-emerald-600 dark:text-emerald-400'
+                        : 'text-rose-600 dark:text-rose-400'
+                    }`}
+                  >
+                    ({isRegPositive ? '+' : ''}{regChangePercent.toFixed(2)}%)
+                  </span>
+                )}
+
+                {hasExtendedDiff && (
+                  <>
+                    <span className="text-slate-300 dark:text-zinc-700">·</span>
+                    <span className="text-slate-400 dark:text-zinc-400 font-sans">
+                      {session === 'PRE' ? '프리마켓' : session === 'POST' ? '애프터마켓' : '야간장'}
+                    </span>
+                    <span
+                      className={`font-semibold ${
+                        isExtPositive
+                          ? 'text-emerald-600 dark:text-emerald-400'
+                          : 'text-rose-600 dark:text-rose-400'
+                      }`}
+                    >
+                      {isExtPositive ? '+' : ''}{formatCurrency(extChange)} ({isExtPositive ? '+' : ''}{extChangePercent.toFixed(2)}%)
+                    </span>
+                  </>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-[11px] sm:text-xs text-slate-500 dark:text-zinc-400 font-mono">
+                <span className="text-slate-400 dark:text-zinc-400 font-sans">전일 종가</span>
+                <span className="font-semibold text-slate-700 dark:text-zinc-200">
+                  {formatCurrency(prevClose)}
+                </span>
+                <span className="text-slate-300 dark:text-zinc-700">·</span>
+                <span className="text-slate-400 dark:text-zinc-400 font-sans">일중 범위</span>
+                <span className="text-slate-600 dark:text-zinc-300">
+                  {formatCurrency(currentStock.dayLow || latestPrice * 0.99)} ~{' '}
+                  {formatCurrency(currentStock.dayHigh || latestPrice * 1.01)}
+                </span>
+              </div>
+            )}
+
+            <p className="text-[10.5px] sm:text-[11px] text-slate-400 dark:text-zinc-400 line-clamp-1">
+              * 프리(04:00~) · 정규(09:30~16:00) · 애프터(16:00~20:00) · 야간 실시간 체결가를 반영합니다.
             </p>
           </div>
 
-          {/* 52-Week Range Slider (7 Cols) */}
-          <div className="lg:col-span-7 bg-slate-50 dark:bg-zinc-800/40 p-4 rounded-xl border border-slate-200/60 dark:border-zinc-800/80 space-y-2">
-            <div className="flex items-center justify-between text-xs font-medium text-slate-600 dark:text-zinc-400">
-              <span>52주 최저: {formatCurrency(low52)}</span>
-              <span className="font-bold text-blue-600 dark:text-blue-400 font-mono">
-                현재 위치: {pos52.toFixed(0)}%
-              </span>
-              <span>52주 최고: {formatCurrency(high52)}</span>
-            </div>
+          {/* Right: 1D Intraday Mini Chart with Extended Hours (Target Circled Spot) */}
+          <div className="w-full sm:w-[260px] md:w-[300px] lg:w-[340px] shrink-0">
+            <IntradayMiniChart
+              candles={currentCandles}
+              previousClose={prevClose}
+              currentPrice={latestPrice}
+              symbol={activeTicker}
+            />
+          </div>
+        </div>
 
-            <div className="relative w-full h-2.5 bg-slate-200 dark:bg-zinc-700 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500 rounded-full transition-all duration-500"
-                style={{ width: `${pos52}%` }}
-              />
-            </div>
+        {/* 52-Week Range Slider (Full Width) */}
+        <div className="bg-slate-50 dark:bg-zinc-800/40 p-3.5 sm:p-4 rounded-xl border border-slate-200/60 dark:border-zinc-800/80 space-y-2">
+          <div className="flex items-center justify-between text-xs font-medium text-slate-600 dark:text-zinc-400">
+            <span>52주 최저: {formatCurrency(low52)}</span>
+            <span className="font-bold text-blue-600 dark:text-blue-400 font-mono">
+              현재 위치: {pos52.toFixed(0)}%
+            </span>
+            <span>52주 최고: {formatCurrency(high52)}</span>
+          </div>
 
-            <div className="flex items-center justify-between text-[11px] text-slate-400">
-              <span>전일 종가: {formatCurrency(currentStock.previousClose || price)}</span>
-              <span>
-                일중 범위: {formatCurrency(currentStock.dayLow || price * 0.99)} ~{' '}
-                {formatCurrency(currentStock.dayHigh || price * 1.01)}
-              </span>
-            </div>
+          <div className="relative w-full h-2.5 bg-slate-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500 rounded-full transition-all duration-500"
+              style={{ width: `${pos52}%` }}
+            />
+          </div>
+
+          <div className="flex items-center justify-between text-[11px] text-slate-400">
+            <span>전일 종가: {formatCurrency(prevClose)}</span>
+            <span>
+              일중 범위: {formatCurrency(currentStock.dayLow || latestPrice * 0.99)} ~{' '}
+              {formatCurrency(currentStock.dayHigh || latestPrice * 1.01)}
+            </span>
           </div>
         </div>
 
@@ -247,27 +421,6 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
             </div>
             <div className="text-[10.5px] text-slate-400 font-medium">매수 88% 컨센서스</div>
           </div>
-        </div>
-
-        {/* 3. Strategic Watchpoint Pills */}
-        <div className="pt-3 border-t border-slate-100 dark:border-zinc-800 flex flex-wrap items-center gap-2 text-xs">
-          <span className="text-[11px] font-bold text-slate-400 dark:text-zinc-500 uppercase flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-amber-500" />
-            핵심 투자 모멘텀:
-          </span>
-
-          <span className="px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-700 dark:text-blue-300 font-medium border border-blue-500/20">
-            ☁️ Google Cloud 연간 런레이트 $40B+ & OP 마진 11%+
-          </span>
-          <span className="px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-700 dark:text-purple-300 font-medium border border-purple-500/20">
-            🧠 자체 실리콘 TPU Trillium & Gemini 2.0 추론 원가 50% 절감
-          </span>
-          <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-medium border border-emerald-500/20">
-            🚗 Waymo 주당 10만+ 건 유료 무인 로보택시 상용 주행
-          </span>
-          <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 font-medium border border-slate-200 dark:border-zinc-700">
-            🛡️ 순현금 $121B 및 $70B 자사주 매입의 하방 안전마진
-          </span>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ export interface Candle {
   Volume: number;
   rsi?: number | null;
   mfi?: number | null;
+  session?: 'PRE' | 'REGULAR' | 'POST';
 }
 
 export interface StockFundamentals {
@@ -36,11 +37,18 @@ export interface StockFundamentals {
   regularMarketPrice?: number;
   regularMarketChange?: number;
   regularMarketChangePercent?: number;
+  regularMarketPreviousClose?: number;
   regularLastPrice?: number;
   regularLastTime?: string;
   extendedLastPrice?: number;
   extendedLastTime?: string;
   extendedLastType?: string;
+  postMarketPrice?: number;
+  postMarketChange?: number;
+  postMarketChangePercent?: number;
+  preMarketPrice?: number;
+  preMarketChange?: number;
+  preMarketChangePercent?: number;
   targetHighPrice?: number;
   targetLowPrice?: number;
   targetMeanPrice?: number;
@@ -67,6 +75,7 @@ export interface StockFundamentals {
 export interface StockData {
   fundamentals: StockFundamentals;
   candles: {
+    '1d_intraday'?: Candle[];
     '1h'?: Candle[];
     '1d'?: Candle[];
     '1w'?: Candle[];
