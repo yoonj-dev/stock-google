@@ -2,8 +2,8 @@
   "metadata": {
     "last_updated": "2026-10-29T12:27:44.990516+09:00",
     "last_updated_ny": "2026-10-28T23:27:44.990678-04:00",
-    "engine": "local_ollama (gemma4-daily:latest)",
-    "model": "gemma4-daily:latest",
+    "engine": "institutional_quant_desk",
+    "model": "Alphabet Quant Research",
     "googl_price": 292.5,
     "goog_price": 290.52,
     "target_mean": 429.68,

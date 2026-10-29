@@ -77,7 +77,7 @@ export const App: React.FC = () => {
           googCandles={googData.candles?.['1d_intraday']}
         />
 
-        {/* Local LLM Synthesis Station (Pre-compiled via PC Pipeline) */}
+        {/* Institutional Quantitative Research Station (In-Depth Investment Memo & Q&A) */}
         <LocalLlmSynthesizer
           googl={googl}
           goog={goog}

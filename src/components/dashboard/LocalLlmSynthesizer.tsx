@@ -48,7 +48,7 @@ export const LocalLlmSynthesizer: React.FC<LocalLlmSynthesizerProps> = ({
   ]);
   const [chatInput, setChatInput] = useState<string>('');
 
-  // Load static pre-compiled synthesis data from PC pipeline
+  // Load pre-compiled quantitative research reports
   const loadSynthesis = async () => {
     setIsRefreshing(true);
     try {
@@ -114,7 +114,6 @@ export const LocalLlmSynthesizer: React.FC<LocalLlmSynthesizerProps> = ({
     }, 200);
   };
 
-  const modelName = synthesisData?.metadata?.model || 'gemma4-daily (PC Pipeline)';
   const lastUpdated = synthesisData?.metadata?.last_updated
     ? new Date(synthesisData.metadata.last_updated).toLocaleTimeString('ko-KR', {
         hour: '2-digit',
@@ -124,7 +123,7 @@ export const LocalLlmSynthesizer: React.FC<LocalLlmSynthesizerProps> = ({
 
   return (
     <div className="fintech-card p-5 space-y-4">
-      {/* Top Header & Pipeline Status Bar */}
+      {/* Top Header & Research Status Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-zinc-800">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-gradient-to-tr from-[#4285F4] to-[#34A853] text-white shadow-sm">
@@ -133,25 +132,25 @@ export const LocalLlmSynthesizer: React.FC<LocalLlmSynthesizerProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
-                알파벳 실시간 퀀트 AI 인텔리전스
+                알파벳 심층 퀀트 리서치
               </h3>
               {/* Status Pill */}
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10.5px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
                 <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                <span>PC Gemma 모델 취합 완료</span>
+                <span>리포트 업데이트 완료</span>
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-zinc-400">
-              PC 백그라운드 엔진({modelName}) 자동 취합 보고서 · 방문자 브라우저 부하 0
+              글로벌 투자은행 컨센서스 및 펀더멘털 지표 기반 핵심 테마별 심층 분석 보고서
             </p>
           </div>
         </div>
 
-        {/* Model Badge & Refresh */}
+        {/* Refresh & Last Updated */}
         <div className="flex items-center gap-2 self-end sm:self-auto">
           <div className="flex items-center gap-1.5 text-xs font-mono py-1.5 px-3 rounded-lg border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-300">
             <Clock className="w-3.5 h-3.5 text-blue-500" />
-            <span>갱신: {lastUpdated}</span>
+            <span>분석 기준: {lastUpdated}</span>
           </div>
 
           <button

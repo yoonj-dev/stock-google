@@ -149,7 +149,7 @@ export const IntradayMiniChart: React.FC<IntradayMiniChartProps> = ({
   if (!hasData) {
     return (
       <div className={`flex flex-col items-center justify-center h-full p-2 rounded-xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-200/60 dark:border-zinc-800 text-[11px] text-slate-400 dark:text-zinc-500 ${className}`}>
-        <span>1D 장외 차트 취합 중...</span>
+        <span>1D 차트 동기화 중...</span>
       </div>
     );
   }

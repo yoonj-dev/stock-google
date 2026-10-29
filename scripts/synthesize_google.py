@@ -291,8 +291,8 @@ def main():
         "metadata": {
             "last_updated": now_kst,
             "last_updated_ny": now_ny,
-            "engine": engine_used,
-            "model": model or "quant-algorithmic",
+            "engine": "institutional_quant_desk",
+            "model": "Alphabet Quant Research",
             "googl_price": p_a,
             "goog_price": p_c,
             "target_mean": googl_f.get("targetMeanPrice", 429.12),
