@@ -34,7 +34,7 @@ export const Footer: React.FC = () => {
             </a>
             <span className="text-slate-300 dark:text-zinc-700">·</span>
             <a
-              href="https://etf.on-tap.xyz"
+              href="https://alpha.on-tap.xyz"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-1 transition-colors"

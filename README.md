@@ -2,7 +2,7 @@
 
 > **알파벳(GOOGL · GOOG) 올인원 주식 인텔리전스, 실시간 로컬 LLM 퀀트 취합 & 트레이딩뷰 허브**  
 > **공식 서비스 URL**: `https://google.on-tap.xyz` (배포 예정)  
-> **생태계**: [Stock on Tap](https://stock.on-tap.xyz) · [Alpha on Tap](https://etf.on-tap.xyz) · [On Tap Dev](https://dev.on-tap.xyz)
+> **생태계**: [Stock on Tap](https://stock.on-tap.xyz) · [Alpha on Tap](https://alpha.on-tap.xyz) · [On Tap Dev](https://dev.on-tap.xyz)
 
 ---
 
