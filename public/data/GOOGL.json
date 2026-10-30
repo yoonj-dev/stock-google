@@ -1,7 +1,7 @@
 {
   "metadata": {
     "symbol": "GOOGL",
-    "last_updated": "2026-10-29T19:57:59.191368-04:00"
+    "last_updated": "2026-10-30T01:49:52.035523-04:00"
   },
   "fundamentals": {
     "address1": "1600 Amphitheatre Parkway",
@@ -45,25 +45,25 @@
     "forwardPE": 18.75,
     "volume": 138462344,
     "regularMarketVolume": 138462344,
-    "averageVolume": 26001484,
-    "averageVolume10days": 27549800,
-    "averageDailyVolume10Day": 27549800,
+    "averageVolume": 27781660,
+    "averageVolume10days": 39588270,
+    "averageDailyVolume10Day": 39588270,
     "bid": 281.0,
     "ask": 285.97,
     "bidSize": 1,
     "askSize": 3,
     "marketCap": 3471100346368,
-    "nonDilutedMarketCap": 3956802527243,
+    "nonDilutedMarketCap": 3480914580000,
     "fiftyTwoWeekLow": 270.7,
     "fiftyTwoWeekHigh": 408.61,
     "allTimeHigh": 408.61,
     "allTimeLow": 2.4,
-    "fulldayPrice": 280.56,
-    "fulldayChange": -44.33,
-    "fulldayChangePercent": -13.64,
+    "fulldayPrice": 283.82,
+    "fulldayChange": -43.15,
+    "fulldayChangePercent": -13.28,
     "priceToSalesTrailing12Months": 7.79,
-    "fiftyDayAverage": 341.51,
-    "twoHundredDayAverage": 341.2,
+    "fiftyDayAverage": 340.29,
+    "twoHundredDayAverage": 340.94,
     "trailingAnnualDividendRate": 0.0,
     "trailingAnnualDividendYield": 0.0,
     "currency": "USD",
@@ -96,12 +96,12 @@
     "lastSplitDate": 1658102400,
     "enterpriseToRevenue": 8.68,
     "enterpriseToEbitda": 22.35,
-    "52WeekChange": 0.15,
-    "SandP52WeekChange": 0.14,
+    "52WeekChange": 0.01,
+    "SandP52WeekChange": 0.13,
     "lastDividendValue": 0.22,
     "lastDividendDate": 1788480000,
     "quoteType": "EQUITY",
-    "currentPrice": 280.56,
+    "currentPrice": 283.82,
     "targetHighPrice": 500.0,
     "targetLowPrice": 325.0,
     "targetMeanPrice": 419.92,
@@ -136,8 +136,6 @@
     "quoteSourceName": "Nasdaq Real Time Price",
     "triggerable": true,
     "customPriceAlertConfidence": "HIGH",
-    "marketState": "POST",
-    "postMarketTime": 1793318267,
     "regularMarketTime": 1793304000,
     "exchange": "NMS",
     "messageBoardId": "finmb_29096",
@@ -146,31 +144,27 @@
     "gmtOffSetMilliseconds": -14400000,
     "market": "us_market",
     "esgPopulated": false,
-    "twoHundredDayAverageChange": -57.38,
-    "twoHundredDayAverageChangePercent": -0.17,
-    "sourceInterval": 15,
-    "exchangeDataDelayedBy": 15,
-    "averageAnalystRating": "1.4 - Strong Buy",
-    "cryptoTradeable": false,
     "shortName": "Alphabet Inc.",
     "longName": "Alphabet Inc.",
+    "postMarketTime": 1793318400,
+    "marketState": "PRE",
     "hasPrePostMarketData": true,
     "firstTradeDateMilliseconds": 1092922200000,
-    "postMarketChangePercent": -1.15,
-    "postMarketPrice": 280.56,
-    "postMarketChange": -3.26,
+    "postMarketChangePercent": -1.11,
+    "postMarketPrice": 280.66,
+    "postMarketChange": -3.16,
     "regularMarketChange": -41.07,
     "regularMarketChangePercent": -12.64,
     "regularMarketPrice": 283.82,
     "regularMarketDayRange": "280.36 - 288.33",
     "fullExchangeName": "NasdaqGS",
-    "averageDailyVolume3Month": 26001484,
+    "averageDailyVolume3Month": 27781660,
     "fiftyTwoWeekLowChange": 13.12,
     "fiftyTwoWeekLowChangePercent": 0.05,
     "fiftyTwoWeekRange": "270.7 - 408.61",
     "fiftyTwoWeekHighChange": -124.79,
     "fiftyTwoWeekHighChangePercent": -0.31,
-    "fiftyTwoWeekChangePercent": 15.42,
+    "fiftyTwoWeekChangePercent": 0.83,
     "dividendDate": 1789344000,
     "earningsTimestamp": 1793217600,
     "earningsTimestampStart": 1793217600,
@@ -182,14 +176,20 @@
     "epsForward": 15.14,
     "epsCurrentYear": 15.15,
     "priceEpsCurrentYear": 18.74,
-    "fiftyDayAverageChange": -57.69,
+    "fiftyDayAverageChange": -56.47,
     "fiftyDayAverageChangePercent": -0.17,
+    "twoHundredDayAverageChange": -57.12,
+    "twoHundredDayAverageChangePercent": -0.17,
+    "sourceInterval": 15,
+    "exchangeDataDelayedBy": 15,
+    "averageAnalystRating": "1.4 - Strong Buy",
+    "cryptoTradeable": false,
     "displayName": "Alphabet",
     "trailingPegRatio": 1.14,
     "regularLastPrice": 283.82,
-    "change": -3.26,
-    "changePercent": -1.15,
-    "extendedLastPrice": 280.56,
+    "change": -41.07,
+    "changePercent": -12.64,
+    "extendedLastPrice": 280.66,
     "extendedLastType": "POST",
     "earningsFlash": {
       "hasData": true,
@@ -203,7 +203,7 @@
       "epsEstimate": 3.01,
       "epsSurprisePercent": -29.52,
       "epsBeat": false,
-      "daysSinceReport": 1,
+      "daysSinceReport": 2,
       "isBreaking": true,
       "nextEarningsDate": "2027-02-03",
       "nextEpsEstimate": 3.21,
@@ -225,7 +225,7 @@
       "epsEstimate": 3.01,
       "epsSurprisePercent": -29.52,
       "epsBeat": false,
-      "daysSinceReport": 1,
+      "daysSinceReport": 2,
       "isBreaking": true,
       "nextEarningsDate": "2027-02-03",
       "nextEpsEstimate": 3.21,
@@ -234,6 +234,62 @@
       "operatingMargins": 34.0,
       "totalRevenueTTM": 445.9,
       "keyTakeaway": "2026 Q3 공식 실적 기준 분기 매출 $119.8B(+24.2%), 주당순이익(EPS) $2.12 (예상 하회(Miss))를 기록했습니다. 영업이익률 34.0% 수준의 본업 수익성을 유지하고 있으며, 차기 실적 발표는 2027-02-03로 예정되어 있습니다."
+    },
+    "volatilityAlert": {
+      "triggered": true,
+      "direction": "PLUNGE",
+      "changePercent": -12.64,
+      "changeAmount": -41.07,
+      "sessionPrice": 283.82,
+      "threshold": 3.0,
+      "headline": "🚨 알파벳(GOOGL) -12.64%(-41.07달러) 대규모 급락 긴급 진단",
+      "primaryReason": "2026 Q3 공식 실적 발표 직후, 일회성 투자 평가손실에 따른 회계상 EPS 미스 및 대규모 AI CapEx 지속 우려로 단기 매도 물량이 급증했습니다.",
+      "drivers": [
+        {
+          "title": "2026 Q3 실적 발표 후 단기 투매 충격",
+          "description": "본업 영업이익(OPM 34.0%)은 견조하나, 비영업 항목의 미실현 평가손실 및 월가 눈높이 괴리로 차익실현 출회.",
+          "type": "negative"
+        },
+        {
+          "title": "공격적 AI CapEx 지속에 따른 단기 FCF 위축 우려",
+          "description": "데이터센터 및 자체 TPU Trillium 인프라 투자 가이던스가 높게 유지되며 잉여현금흐름(FCF) 압박에 대한 기관 우려 반영.",
+          "type": "warning"
+        },
+        {
+          "title": "기술적 지지선 이탈 및 알고리즘 기계적 매도",
+          "description": "50일 이동평균선 등 단기 기술적 지지선 하향 이탈로 퀀트 알고리즘 펀드의 손절 및 매도 물량 유입.",
+          "type": "negative"
+        }
+      ],
+      "institutionalVerdict": "본업 펀더멘털(클라우드 고성장, 검색 마진 34%+)의 구조적 훼손이 아닌 일회성/수급성 충격입니다. 현 주가는 Forward P/E 18.8x 수준으로 역사적 밸류에이션 바닥 구간(안전마진 40%+)에 진입했습니다.",
+      "actionGuide": "단기 공포에 따른 패닉 셀링을 지양하고, $275~$285 구간 지지선 확인 후 분할 매수(DCA) 관점으로 접근하는 것이 유리합니다.",
+      "relatedNews": [
+        {
+          "title": "Google stock gets shredded after earnings—here's 2 reasons why investors hated the quarter",
+          "source": "Yahoo Finance",
+          "link": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxObUdnZkYxXzBTRmhYR29adzI1M0oxMjZMU1VhX2F0cFpEdkFGNnd3Sk42Y21QZXVNLXA5NTJiQmlXZUpFVWhFNlptbjQyYWR0a09jRUZCZGdoVDJnTGlrOWthVE5qaXhCQkI4a0tWVzV1bTg4dGx6b3YwbUtWUk03UDRjdlh3Nlppd3FiVTgwVUlNSXdfaWdKR0hpTnJuVS1CRENOTGhSN05RbXlpaFdaZG5uOC1HMU1zTWJ1MnFjN1hVUEpubGpnaEZoQmRMdVBzSG1Wcmk2NGdHTmpWWkdxYS1scW54elU?oc=5",
+          "pubDate": "Thu, 29 Oct 2026 09:01:08 GMT"
+        },
+        {
+          "title": "Alphabet stock rises as OpenAI plans to buy Google’s TPUs",
+          "source": "Investing.com",
+          "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOQk14NXZ0bTY0Yk9sR0FOWTJIMzJnUmJUOGFYR05MZ21Janc1bnJmdnNvWjJSMVZaNU9IQlVIZkYyamw2WlpZcmZzYVdLVGYtSjhaWVJaM3NIWm1IMmdFVlF3cnJkY3JXM1phczA5OUR2c29Id2ZFRndlSFMwa2w5cGk5anpMUFc3b3NHbHFBQ1FpcG5WTERqZXRvRG1GenpNR1JGRy1IWk41VTJaRUNyRHdDYw?oc=5",
+          "pubDate": "Wed, 28 Oct 2026 14:56:35 GMT"
+        },
+        {
+          "title": "Why Alphabet (GOOGL) shares are sliding today",
+          "source": "Yahoo Finance",
+          "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPQmJ1N3ZZWXo3VXA4TXZrRmJXMVdzU1dOUmJVNFpfenJzQ2VxVXJsX2xhSzJvNTRwU0pJNTN1LWsxSmZ6S2RXYkhVQXdwelZzbFdpcm1IUjRFS2E3NmUtZ2JxckRmdHRlZ1FKNVhsZDAxeGdMbTRpOXNIcm9iaWdJQUJ0ZzdhU0xvU3ROUlVwbEhwRFZ3cEozaWxCQ2FPX3M?oc=5",
+          "pubDate": "Thu, 29 Oct 2026 17:44:34 GMT"
+        },
+        {
+          "title": "Is Alphabet Stock a Buy After Its Post-Earnings Drop?",
+          "source": "The Motley Fool",
+          "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQSW5oN1Ytb2N6Q1VacjllbjVwSTlBM0tWUldKb1JtLVBkOUVkMVFzLXVfQ1ZOR3JrMkFFSHFwVWh5WUhscURENDJ1d1lyZjZWaUV0a3k4dTZoTEdnd2w4aHNPQWZJbUFhU1NLa3Y2dWh0bnVXYzZNQ2RLbzh6VDZ0WnctbjBxZHNNYVNGN2N1aTZHdkw0T3lFcWdlQQ?oc=5",
+          "pubDate": "Fri, 30 Oct 2026 00:47:00 GMT"
+        }
+      ],
+      "detectedAt": "2026-10-30 01:49 EDT"
     }
   },
   "earnings_flash": {
@@ -248,7 +304,7 @@
     "epsEstimate": 3.01,
     "epsSurprisePercent": -29.52,
     "epsBeat": false,
-    "daysSinceReport": 1,
+    "daysSinceReport": 2,
     "isBreaking": true,
     "nextEarningsDate": "2027-02-03",
     "nextEpsEstimate": 3.21,
@@ -270,7 +326,7 @@
     "epsEstimate": 3.01,
     "epsSurprisePercent": -29.52,
     "epsBeat": false,
-    "daysSinceReport": 1,
+    "daysSinceReport": 2,
     "isBreaking": true,
     "nextEarningsDate": "2027-02-03",
     "nextEpsEstimate": 3.21,
@@ -280,6 +336,100 @@
     "totalRevenueTTM": 445.9,
     "keyTakeaway": "2026 Q3 공식 실적 기준 분기 매출 $119.8B(+24.2%), 주당순이익(EPS) $2.12 (예상 하회(Miss))를 기록했습니다. 영업이익률 34.0% 수준의 본업 수익성을 유지하고 있으며, 차기 실적 발표는 2027-02-03로 예정되어 있습니다."
   },
+  "volatility_alert": {
+    "triggered": true,
+    "direction": "PLUNGE",
+    "changePercent": -12.64,
+    "changeAmount": -41.07,
+    "sessionPrice": 283.82,
+    "threshold": 3.0,
+    "headline": "🚨 알파벳(GOOGL) -12.64%(-41.07달러) 대규모 급락 긴급 진단",
+    "primaryReason": "2026 Q3 공식 실적 발표 직후, 일회성 투자 평가손실에 따른 회계상 EPS 미스 및 대규모 AI CapEx 지속 우려로 단기 매도 물량이 급증했습니다.",
+    "drivers": [
+      {
+        "title": "2026 Q3 실적 발표 후 단기 투매 충격",
+        "description": "본업 영업이익(OPM 34.0%)은 견조하나, 비영업 항목의 미실현 평가손실 및 월가 눈높이 괴리로 차익실현 출회.",
+        "type": "negative"
+      },
+      {
+        "title": "공격적 AI CapEx 지속에 따른 단기 FCF 위축 우려",
+        "description": "데이터센터 및 자체 TPU Trillium 인프라 투자 가이던스가 높게 유지되며 잉여현금흐름(FCF) 압박에 대한 기관 우려 반영.",
+        "type": "warning"
+      },
+      {
+        "title": "기술적 지지선 이탈 및 알고리즘 기계적 매도",
+        "description": "50일 이동평균선 등 단기 기술적 지지선 하향 이탈로 퀀트 알고리즘 펀드의 손절 및 매도 물량 유입.",
+        "type": "negative"
+      }
+    ],
+    "institutionalVerdict": "본업 펀더멘털(클라우드 고성장, 검색 마진 34%+)의 구조적 훼손이 아닌 일회성/수급성 충격입니다. 현 주가는 Forward P/E 18.8x 수준으로 역사적 밸류에이션 바닥 구간(안전마진 40%+)에 진입했습니다.",
+    "actionGuide": "단기 공포에 따른 패닉 셀링을 지양하고, $275~$285 구간 지지선 확인 후 분할 매수(DCA) 관점으로 접근하는 것이 유리합니다.",
+    "relatedNews": [
+      {
+        "title": "Google stock gets shredded after earnings—here's 2 reasons why investors hated the quarter",
+        "source": "Yahoo Finance",
+        "link": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxObUdnZkYxXzBTRmhYR29adzI1M0oxMjZMU1VhX2F0cFpEdkFGNnd3Sk42Y21QZXVNLXA5NTJiQmlXZUpFVWhFNlptbjQyYWR0a09jRUZCZGdoVDJnTGlrOWthVE5qaXhCQkI4a0tWVzV1bTg4dGx6b3YwbUtWUk03UDRjdlh3Nlppd3FiVTgwVUlNSXdfaWdKR0hpTnJuVS1CRENOTGhSN05RbXlpaFdaZG5uOC1HMU1zTWJ1MnFjN1hVUEpubGpnaEZoQmRMdVBzSG1Wcmk2NGdHTmpWWkdxYS1scW54elU?oc=5",
+        "pubDate": "Thu, 29 Oct 2026 09:01:08 GMT"
+      },
+      {
+        "title": "Alphabet stock rises as OpenAI plans to buy Google’s TPUs",
+        "source": "Investing.com",
+        "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOQk14NXZ0bTY0Yk9sR0FOWTJIMzJnUmJUOGFYR05MZ21Janc1bnJmdnNvWjJSMVZaNU9IQlVIZkYyamw2WlpZcmZzYVdLVGYtSjhaWVJaM3NIWm1IMmdFVlF3cnJkY3JXM1phczA5OUR2c29Id2ZFRndlSFMwa2w5cGk5anpMUFc3b3NHbHFBQ1FpcG5WTERqZXRvRG1GenpNR1JGRy1IWk41VTJaRUNyRHdDYw?oc=5",
+        "pubDate": "Wed, 28 Oct 2026 14:56:35 GMT"
+      },
+      {
+        "title": "Why Alphabet (GOOGL) shares are sliding today",
+        "source": "Yahoo Finance",
+        "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPQmJ1N3ZZWXo3VXA4TXZrRmJXMVdzU1dOUmJVNFpfenJzQ2VxVXJsX2xhSzJvNTRwU0pJNTN1LWsxSmZ6S2RXYkhVQXdwelZzbFdpcm1IUjRFS2E3NmUtZ2JxckRmdHRlZ1FKNVhsZDAxeGdMbTRpOXNIcm9iaWdJQUJ0ZzdhU0xvU3ROUlVwbEhwRFZ3cEozaWxCQ2FPX3M?oc=5",
+        "pubDate": "Thu, 29 Oct 2026 17:44:34 GMT"
+      },
+      {
+        "title": "Is Alphabet Stock a Buy After Its Post-Earnings Drop?",
+        "source": "The Motley Fool",
+        "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQSW5oN1Ytb2N6Q1VacjllbjVwSTlBM0tWUldKb1JtLVBkOUVkMVFzLXVfQ1ZOR3JrMkFFSHFwVWh5WUhscURENDJ1d1lyZjZWaUV0a3k4dTZoTEdnd2w4aHNPQWZJbUFhU1NLa3Y2dWh0bnVXYzZNQ2RLbzh6VDZ0WnctbjBxZHNNYVNGN2N1aTZHdkw0T3lFcWdlQQ?oc=5",
+        "pubDate": "Fri, 30 Oct 2026 00:47:00 GMT"
+      }
+    ],
+    "detectedAt": "2026-10-30 01:49 EDT"
+  },
+  "news": [
+    {
+      "title": "Google stock gets shredded after earnings—here's 2 reasons why investors hated the quarter",
+      "source": "Yahoo Finance",
+      "link": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxObUdnZkYxXzBTRmhYR29adzI1M0oxMjZMU1VhX2F0cFpEdkFGNnd3Sk42Y21QZXVNLXA5NTJiQmlXZUpFVWhFNlptbjQyYWR0a09jRUZCZGdoVDJnTGlrOWthVE5qaXhCQkI4a0tWVzV1bTg4dGx6b3YwbUtWUk03UDRjdlh3Nlppd3FiVTgwVUlNSXdfaWdKR0hpTnJuVS1CRENOTGhSN05RbXlpaFdaZG5uOC1HMU1zTWJ1MnFjN1hVUEpubGpnaEZoQmRMdVBzSG1Wcmk2NGdHTmpWWkdxYS1scW54elU?oc=5",
+      "pubDate": "Thu, 29 Oct 2026 09:01:08 GMT"
+    },
+    {
+      "title": "Alphabet stock rises as OpenAI plans to buy Google’s TPUs",
+      "source": "Investing.com",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOQk14NXZ0bTY0Yk9sR0FOWTJIMzJnUmJUOGFYR05MZ21Janc1bnJmdnNvWjJSMVZaNU9IQlVIZkYyamw2WlpZcmZzYVdLVGYtSjhaWVJaM3NIWm1IMmdFVlF3cnJkY3JXM1phczA5OUR2c29Id2ZFRndlSFMwa2w5cGk5anpMUFc3b3NHbHFBQ1FpcG5WTERqZXRvRG1GenpNR1JGRy1IWk41VTJaRUNyRHdDYw?oc=5",
+      "pubDate": "Wed, 28 Oct 2026 14:56:35 GMT"
+    },
+    {
+      "title": "Why Alphabet (GOOGL) shares are sliding today",
+      "source": "Yahoo Finance",
+      "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPQmJ1N3ZZWXo3VXA4TXZrRmJXMVdzU1dOUmJVNFpfenJzQ2VxVXJsX2xhSzJvNTRwU0pJNTN1LWsxSmZ6S2RXYkhVQXdwelZzbFdpcm1IUjRFS2E3NmUtZ2JxckRmdHRlZ1FKNVhsZDAxeGdMbTRpOXNIcm9iaWdJQUJ0ZzdhU0xvU3ROUlVwbEhwRFZ3cEozaWxCQ2FPX3M?oc=5",
+      "pubDate": "Thu, 29 Oct 2026 17:44:34 GMT"
+    },
+    {
+      "title": "Is Alphabet Stock a Buy After Its Post-Earnings Drop?",
+      "source": "The Motley Fool",
+      "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQSW5oN1Ytb2N6Q1VacjllbjVwSTlBM0tWUldKb1JtLVBkOUVkMVFzLXVfQ1ZOR3JrMkFFSHFwVWh5WUhscURENDJ1d1lyZjZWaUV0a3k4dTZoTEdnd2w4aHNPQWZJbUFhU1NLa3Y2dWh0bnVXYzZNQ2RLbzh6VDZ0WnctbjBxZHNNYVNGN2N1aTZHdkw0T3lFcWdlQQ?oc=5",
+      "pubDate": "Fri, 30 Oct 2026 00:47:00 GMT"
+    },
+    {
+      "title": "Alphabet Stock Sinks, Dragging Nasdaq Lower",
+      "source": "WSJ",
+      "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNdEt3QnZYMW5WSVBNMUNqQ3pOUEV6RVVoM2xLa2RfV0VEQ1YyTzE2MFIwTnNGdTRFelljM3gtM3lORnhLYW5nT1VaSk5IVV85NlBIeGFlWlhaOHFIcHZhTm1ER1FsZzdZRElZUHl0Mm4ya04tMjZ2WV9ZbzVJLUhocktXVVFYVy1lbEJOWVF4eFVHdVNsbEQ4Tg?oc=5",
+      "pubDate": "Thu, 29 Oct 2026 18:35:00 GMT"
+    },
+    {
+      "title": "Alphabet Earnings: Why Google Stock Is Falling",
+      "source": "Barron's",
+      "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQc1cyWEw2N29xSWxneld4YlNXRFozMUVXMVVuR1ZBbXBDWno5Nzd4QklMQmFVZi1yTld5M2pfTk9TOXpYdGRBVm51WTNKQ2J4MVJPME1naEtCM3N2SXBNbVVlZzVBdS1nbnVnNy10WFFQanh4Y1VjUW12Y2dsYTVzTw?oc=5",
+      "pubDate": "Thu, 29 Oct 2026 14:56:00 GMT"
+    }
+  ],
   "candles": {
     "1d_intraday": [
       {
@@ -1584,7 +1734,7 @@
         "High": 283.94,
         "Low": 282.4,
         "Close": 282.6,
-        "Volume": 9106412,
+        "Volume": 0,
         "session": "POST"
       },
       {
@@ -2004,25 +2154,23 @@
       {
         "time": "2026-10-29T19:55:00-04:00",
         "Open": 280.5,
-        "High": 280.56,
+        "High": 280.68,
         "Low": 280.4,
-        "Close": 280.56,
+        "Close": 280.66,
+        "Volume": 0,
+        "session": "POST"
+      },
+      {
+        "time": "2026-10-29T20:00:00-04:00",
+        "Open": 280.66,
+        "High": 280.66,
+        "Low": 280.66,
+        "Close": 280.66,
         "Volume": 0,
         "session": "POST"
       }
     ],
     "1h": [
-      {
-        "time": "2026-09-29T19:00:00-04:00",
-        "Open": 341.24,
-        "High": 341.56,
-        "Low": 341.0,
-        "Close": 341.48,
-        "Volume": 0,
-        "rsi": NaN,
-        "mfi": NaN,
-        "session": "POST"
-      },
       {
         "time": "2026-09-30T04:00:00-04:00",
         "Open": 341.75,
@@ -2052,7 +2200,7 @@
         "Low": 343.71,
         "Close": 343.91,
         "Volume": 0,
-        "rsi": 86.31,
+        "rsi": 74.13,
         "mfi": NaN,
         "session": "PRE"
       },
@@ -2063,7 +2211,7 @@
         "Low": 340.92,
         "Close": 344.23,
         "Volume": 0,
-        "rsi": 87.76,
+        "rsi": 78.85,
         "mfi": NaN,
         "session": "PRE"
       },
@@ -2074,7 +2222,7 @@
         "Low": 343.86,
         "Close": 344.81,
         "Volume": 0,
-        "rsi": 89.83,
+        "rsi": 84.37,
         "mfi": NaN,
         "session": "PRE"
       },
@@ -2085,7 +2233,7 @@
         "Low": 343.99,
         "Close": 344.27,
         "Volume": 0,
-        "rsi": 76.77,
+        "rsi": 66.87,
         "mfi": NaN,
         "session": "PRE"
       },
@@ -2096,7 +2244,7 @@
         "Low": 344.08,
         "Close": 349.42,
         "Volume": 8014724,
-        "rsi": 90.72,
+        "rsi": 89.46,
         "mfi": NaN,
         "session": "REGULAR"
       },
@@ -2107,7 +2255,7 @@
         "Low": 347.25,
         "Close": 351.14,
         "Volume": 3290995,
-        "rsi": 92.37,
+        "rsi": 91.54,
         "mfi": NaN,
         "session": "REGULAR"
       },
@@ -2118,7 +2266,7 @@
         "Low": 350.72,
         "Close": 351.9,
         "Volume": 3078150,
-        "rsi": 92.97,
+        "rsi": 92.27,
         "mfi": NaN,
         "session": "REGULAR"
       },
@@ -2129,7 +2277,7 @@
         "Low": 349.73,
         "Close": 350.06,
         "Volume": 1840537,
-        "rsi": 77.29,
+        "rsi": 75.45,
         "mfi": NaN,
         "session": "REGULAR"
       },
@@ -2140,7 +2288,7 @@
         "Low": 348.81,
         "Close": 349.14,
         "Volume": 1213760,
-        "rsi": 70.82,
+        "rsi": 68.66,
         "mfi": NaN,
         "session": "REGULAR"
       },
@@ -2151,7 +2299,7 @@
         "Low": 348.37,
         "Close": 348.64,
         "Volume": 1774460,
-        "rsi": 67.53,
+        "rsi": 65.24,
         "mfi": NaN,
         "session": "REGULAR"
       },
@@ -2162,8 +2310,8 @@
         "Low": 341.0,
         "Close": 344.13,
         "Volume": 7108263,
-        "rsi": 46.51,
-        "mfi": 54.86,
+        "rsi": 43.97,
+        "mfi": NaN,
         "session": "REGULAR"
       },
       {
@@ -2173,7 +2321,7 @@
         "Low": 335.36,
         "Close": 349.96,
         "Volume": 0,
-        "rsi": 62.68,
+        "rsi": 61.46,
         "mfi": 54.86,
         "session": "POST"
       },
@@ -2184,7 +2332,7 @@
         "Low": 335.03,
         "Close": 348.7,
         "Volume": 0,
-        "rsi": 58.56,
+        "rsi": 57.3,
         "mfi": 54.86,
         "session": "POST"
       },
@@ -2195,7 +2343,7 @@
         "Low": 344.08,
         "Close": 348.64,
         "Volume": 0,
-        "rsi": 58.38,
+        "rsi": 57.12,
         "mfi": 54.86,
         "session": "POST"
       },
@@ -2206,7 +2354,7 @@
         "Low": 348.25,
         "Close": 349.39,
         "Volume": 0,
-        "rsi": 60.17,
+        "rsi": 59.02,
         "mfi": 54.86,
         "session": "POST"
       },
@@ -2217,7 +2365,7 @@
         "Low": 344.08,
         "Close": 351.19,
         "Volume": 0,
-        "rsi": 64.19,
+        "rsi": 63.26,
         "mfi": 54.86,
         "session": "PRE"
       },
@@ -2228,7 +2376,7 @@
         "Low": 350.25,
         "Close": 351.58,
         "Volume": 0,
-        "rsi": 65.0,
+        "rsi": 64.11,
         "mfi": 54.86,
         "session": "PRE"
       },
@@ -2239,7 +2387,7 @@
         "Low": 350.85,
         "Close": 351.52,
         "Volume": 0,
-        "rsi": 64.75,
+        "rsi": 63.86,
         "mfi": 54.86,
         "session": "PRE"
       },
@@ -2250,7 +2398,7 @@
         "Low": 348.78,
         "Close": 349.95,
         "Volume": 0,
-        "rsi": 58.51,
+        "rsi": 57.56,
         "mfi": 35.06,
         "session": "PRE"
       },
@@ -2261,7 +2409,7 @@
         "Low": 344.08,
         "Close": 349.39,
         "Volume": 0,
-        "rsi": 56.42,
+        "rsi": 55.46,
         "mfi": 20.74,
         "session": "PRE"
       },
@@ -2272,7 +2420,7 @@
         "Low": 344.08,
         "Close": 350.8,
         "Volume": 0,
-        "rsi": 60.27,
+        "rsi": 59.47,
         "mfi": 0.0,
         "session": "PRE"
       },
@@ -2283,7 +2431,7 @@
         "Low": 341.6,
         "Close": 341.72,
         "Volume": 9408084,
-        "rsi": 37.38,
+        "rsi": 36.61,
         "mfi": 0.0,
         "session": "REGULAR"
       },
@@ -2294,7 +2442,7 @@
         "Low": 339.62,
         "Close": 340.58,
         "Volume": 3677133,
-        "rsi": 35.55,
+        "rsi": 34.8,
         "mfi": 0.0,
         "session": "REGULAR"
       },
@@ -2305,7 +2453,7 @@
         "Low": 339.14,
         "Close": 339.17,
         "Volume": 2891344,
-        "rsi": 33.38,
+        "rsi": 32.65,
         "mfi": 0.0,
         "session": "REGULAR"
       },
@@ -2316,7 +2464,7 @@
         "Low": 335.51,
         "Close": 338.89,
         "Volume": 4926753,
-        "rsi": 32.95,
+        "rsi": 32.23,
         "mfi": 0.0,
         "session": "REGULAR"
       },
@@ -2327,7 +2475,7 @@
         "Low": 338.56,
         "Close": 338.75,
         "Volume": 2074616,
-        "rsi": 32.73,
+        "rsi": 32.01,
         "mfi": 8.95,
         "session": "REGULAR"
       },
@@ -2338,7 +2486,7 @@
         "Low": 338.16,
         "Close": 339.14,
         "Volume": 1993182,
-        "rsi": 34.08,
+        "rsi": 33.39,
         "mfi": 8.25,
         "session": "REGULAR"
       },
@@ -2349,7 +2497,7 @@
         "Low": 337.96,
         "Close": 338.26,
         "Volume": 2775528,
-        "rsi": 32.48,
+        "rsi": 31.81,
         "mfi": 7.43,
         "session": "REGULAR"
       },
@@ -2360,7 +2508,7 @@
         "Low": 322.16,
         "Close": 338.96,
         "Volume": 0,
-        "rsi": 35.09,
+        "rsi": 34.47,
         "mfi": 7.43,
         "session": "POST"
       },
@@ -2371,7 +2519,7 @@
         "Low": 322.01,
         "Close": 339.28,
         "Volume": 0,
-        "rsi": 36.31,
+        "rsi": 35.7,
         "mfi": 7.43,
         "session": "POST"
       },
@@ -2382,7 +2530,7 @@
         "Low": 338.77,
         "Close": 339.1,
         "Volume": 0,
-        "rsi": 35.89,
+        "rsi": 35.29,
         "mfi": 7.43,
         "session": "POST"
       },
@@ -2393,7 +2541,7 @@
         "Low": 338.24,
         "Close": 339.2,
         "Volume": 0,
-        "rsi": 36.33,
+        "rsi": 35.74,
         "mfi": 7.43,
         "session": "POST"
       },
@@ -2404,7 +2552,7 @@
         "Low": 338.24,
         "Close": 341.05,
         "Volume": 0,
-        "rsi": 43.78,
+        "rsi": 43.32,
         "mfi": 7.43,
         "session": "PRE"
       },
@@ -2415,7 +2563,7 @@
         "Low": 340.7,
         "Close": 340.96,
         "Volume": 0,
-        "rsi": 43.51,
+        "rsi": 43.05,
         "mfi": 7.43,
         "session": "PRE"
       },
@@ -2426,7 +2574,7 @@
         "Low": 340.0,
         "Close": 340.36,
         "Volume": 0,
-        "rsi": 41.69,
+        "rsi": 41.23,
         "mfi": 7.43,
         "session": "PRE"
       },
@@ -2437,7 +2585,7 @@
         "Low": 338.24,
         "Close": 339.53,
         "Volume": 0,
-        "rsi": 39.24,
+        "rsi": 38.79,
         "mfi": 11.31,
         "session": "PRE"
       },
@@ -2448,7 +2596,7 @@
         "Low": 339.2,
         "Close": 339.86,
         "Volume": 0,
-        "rsi": 40.73,
+        "rsi": 40.31,
         "mfi": 14.16,
         "session": "PRE"
       },
@@ -2459,7 +2607,7 @@
         "Low": 339.93,
         "Close": 341.35,
         "Volume": 0,
-        "rsi": 47.04,
+        "rsi": 46.7,
         "mfi": 17.66,
         "session": "PRE"
       },
@@ -2470,7 +2618,7 @@
         "Low": 341.16,
         "Close": 344.4,
         "Volume": 7401422,
-        "rsi": 57.12,
+        "rsi": 56.9,
         "mfi": 66.78,
         "session": "REGULAR"
       },
@@ -2481,7 +2629,7 @@
         "Low": 341.7,
         "Close": 342.06,
         "Volume": 2953987,
-        "rsi": 49.36,
+        "rsi": 49.14,
         "mfi": 49.17,
         "session": "REGULAR"
       },
@@ -2492,7 +2640,7 @@
         "Low": 341.45,
         "Close": 342.85,
         "Volume": 2096893,
-        "rsi": 51.73,
+        "rsi": 51.53,
         "mfi": 48.77,
         "session": "REGULAR"
       },
@@ -2503,7 +2651,7 @@
         "Low": 342.82,
         "Close": 343.7,
         "Volume": 1506900,
-        "rsi": 54.24,
+        "rsi": 54.06,
         "mfi": 63.86,
         "session": "REGULAR"
       },
@@ -2514,7 +2662,7 @@
         "Low": 342.83,
         "Close": 343.37,
         "Volume": 968623,
-        "rsi": 53.1,
+        "rsi": 52.92,
         "mfi": 59.72,
         "session": "REGULAR"
       },
@@ -2525,7 +2673,7 @@
         "Low": 342.61,
         "Close": 343.19,
         "Volume": 1315283,
-        "rsi": 52.44,
+        "rsi": 52.26,
         "mfi": 54.89,
         "session": "REGULAR"
       },
@@ -2536,7 +2684,7 @@
         "Low": 342.66,
         "Close": 343.59,
         "Volume": 1730324,
-        "rsi": 53.8,
+        "rsi": 53.62,
         "mfi": 59.23,
         "session": "REGULAR"
       },
@@ -2547,7 +2695,7 @@
         "Low": 343.09,
         "Close": 343.16,
         "Volume": 0,
-        "rsi": 52.08,
+        "rsi": 51.9,
         "mfi": 59.23,
         "session": "POST"
       },
@@ -2558,7 +2706,7 @@
         "Low": 320.3,
         "Close": 343.11,
         "Volume": 0,
-        "rsi": 51.87,
+        "rsi": 51.69,
         "mfi": 59.23,
         "session": "POST"
       },
@@ -2569,7 +2717,7 @@
         "Low": 342.66,
         "Close": 343.14,
         "Volume": 0,
-        "rsi": 52.01,
+        "rsi": 51.84,
         "mfi": 59.23,
         "session": "POST"
       },
@@ -2580,7 +2728,7 @@
         "Low": 342.93,
         "Close": 343.25,
         "Volume": 0,
-        "rsi": 52.47,
+        "rsi": 52.3,
         "mfi": 59.23,
         "session": "POST"
       },
@@ -2591,7 +2739,7 @@
         "Low": 342.18,
         "Close": 343.1,
         "Volume": 0,
-        "rsi": 51.71,
+        "rsi": 51.54,
         "mfi": 59.23,
         "session": "PRE"
       },
@@ -2602,7 +2750,7 @@
         "Low": 342.4,
         "Close": 342.78,
         "Volume": 0,
-        "rsi": 50.06,
+        "rsi": 49.89,
         "mfi": 59.23,
         "session": "PRE"
       },
@@ -2613,7 +2761,7 @@
         "Low": 342.24,
         "Close": 342.83,
         "Volume": 0,
-        "rsi": 50.31,
+        "rsi": 50.14,
         "mfi": 59.23,
         "session": "PRE"
       },
@@ -2624,7 +2772,7 @@
         "Low": 342.69,
         "Close": 343.61,
         "Volume": 0,
-        "rsi": 54.45,
+        "rsi": 54.31,
         "mfi": 30.65,
         "session": "PRE"
       },
@@ -2635,7 +2783,7 @@
         "Low": 343.0,
         "Close": 343.24,
         "Volume": 0,
-        "rsi": 52.23,
+        "rsi": 52.08,
         "mfi": 42.53,
         "session": "PRE"
       },
@@ -2646,7 +2794,7 @@
         "Low": 342.13,
         "Close": 342.46,
         "Volume": 0,
-        "rsi": 47.79,
+        "rsi": 47.65,
         "mfi": 58.65,
         "session": "PRE"
       },
@@ -2657,7 +2805,7 @@
         "Low": 342.41,
         "Close": 345.08,
         "Volume": 3896038,
-        "rsi": 60.04,
+        "rsi": 59.96,
         "mfi": 71.18,
         "session": "REGULAR"
       },
@@ -2668,7 +2816,7 @@
         "Low": 343.66,
         "Close": 345.17,
         "Volume": 2017618,
-        "rsi": 60.41,
+        "rsi": 60.32,
         "mfi": 85.36,
         "session": "REGULAR"
       },
@@ -2679,7 +2827,7 @@
         "Low": 344.64,
         "Close": 345.48,
         "Volume": 1761963,
-        "rsi": 61.63,
+        "rsi": 61.55,
         "mfi": NaN,
         "session": "REGULAR"
       },
@@ -2690,7 +2838,7 @@
         "Low": 345.0,
         "Close": 346.46,
         "Volume": 1398380,
-        "rsi": 65.29,
+        "rsi": 65.23,
         "mfi": NaN,
         "session": "REGULAR"
       },
@@ -2701,7 +2849,7 @@
         "Low": 346.13,
         "Close": 346.68,
         "Volume": 1495516,
-        "rsi": 66.07,
+        "rsi": 66.01,
         "mfi": NaN,
         "session": "REGULAR"
       },
@@ -2712,7 +2860,7 @@
         "Low": 346.41,
         "Close": 347.6,
         "Volume": 2438094,
-        "rsi": 69.2,
+        "rsi": 69.15,
         "mfi": NaN,
         "session": "REGULAR"
       },
@@ -2723,7 +2871,7 @@
         "Low": 345.4,
         "Close": 346.62,
         "Volume": 2263555,
-        "rsi": 62.58,
+        "rsi": 62.53,
         "mfi": 85.14,
         "session": "REGULAR"
       },
@@ -2734,7 +2882,7 @@
         "Low": 328.19,
         "Close": 346.18,
         "Volume": 0,
-        "rsi": 59.82,
+        "rsi": 59.76,
         "mfi": 85.14,
         "session": "POST"
       },
@@ -2745,7 +2893,7 @@
         "Low": 323.89,
         "Close": 346.23,
         "Volume": 0,
-        "rsi": 60.05,
+        "rsi": 59.99,
         "mfi": 85.14,
         "session": "POST"
       },
@@ -2756,7 +2904,7 @@
         "Low": 346.04,
         "Close": 346.2,
         "Volume": 0,
-        "rsi": 59.82,
+        "rsi": 59.76,
         "mfi": 85.14,
         "session": "POST"
       },
@@ -2767,7 +2915,7 @@
         "Low": 346.0,
         "Close": 346.05,
         "Volume": 0,
-        "rsi": 58.73,
+        "rsi": 58.67,
         "mfi": 85.14,
         "session": "POST"
       },
@@ -2778,7 +2926,7 @@
         "Low": 346.47,
         "Close": 348.32,
         "Volume": 0,
-        "rsi": 68.21,
+        "rsi": 68.17,
         "mfi": 85.14,
         "session": "PRE"
       },
@@ -2789,7 +2937,7 @@
         "Low": 347.86,
         "Close": 348.57,
         "Volume": 0,
-        "rsi": 69.05,
+        "rsi": 69.02,
         "mfi": 85.14,
         "session": "PRE"
       },
@@ -2800,7 +2948,7 @@
         "Low": 347.98,
         "Close": 348.29,
         "Volume": 0,
-        "rsi": 66.91,
+        "rsi": 66.88,
         "mfi": 85.14,
         "session": "PRE"
       },
@@ -2811,7 +2959,7 @@
         "Low": 346.47,
         "Close": 348.5,
         "Volume": 0,
-        "rsi": 67.72,
+        "rsi": 67.69,
         "mfi": 80.08,
         "session": "PRE"
       },
@@ -2822,7 +2970,7 @@
         "Low": 347.44,
         "Close": 347.64,
         "Volume": 0,
-        "rsi": 61.13,
+        "rsi": 61.1,
         "mfi": 75.81,
         "session": "PRE"
       },
@@ -2833,7 +2981,7 @@
         "Low": 347.07,
         "Close": 347.2,
         "Volume": 0,
-        "rsi": 58.02,
+        "rsi": 57.99,
         "mfi": 70.22,
         "session": "PRE"
       },
@@ -2844,7 +2992,7 @@
         "Low": 344.68,
         "Close": 346.58,
         "Volume": 4598157,
-        "rsi": 53.85,
+        "rsi": 53.81,
         "mfi": 36.48,
         "session": "REGULAR"
       },
@@ -2855,7 +3003,7 @@
         "Low": 346.34,
         "Close": 348.27,
         "Volume": 2354259,
-        "rsi": 61.9,
+        "rsi": 61.87,
         "mfi": 41.2,
         "session": "REGULAR"
       },
@@ -2866,7 +3014,7 @@
         "Low": 347.37,
         "Close": 347.58,
         "Volume": 1411064,
-        "rsi": 57.48,
+        "rsi": 57.45,
         "mfi": 35.52,
         "session": "REGULAR"
       },
@@ -2877,7 +3025,7 @@
         "Low": 346.5,
         "Close": 346.9,
         "Volume": 995616,
-        "rsi": 53.46,
+        "rsi": 53.43,
         "mfi": 40.32,
         "session": "REGULAR"
       },
@@ -2888,7 +3036,7 @@
         "Low": 346.77,
         "Close": 348.66,
         "Volume": 1131643,
-        "rsi": 61.05,
+        "rsi": 61.03,
         "mfi": 46.78,
         "session": "REGULAR"
       },
@@ -2899,7 +3047,7 @@
         "Low": 347.83,
         "Close": 348.58,
         "Volume": 1015443,
-        "rsi": 60.57,
+        "rsi": 60.55,
         "mfi": 51.49,
         "session": "REGULAR"
       },
@@ -2910,7 +3058,7 @@
         "Low": 347.34,
         "Close": 347.7,
         "Volume": 1719858,
-        "rsi": 55.37,
+        "rsi": 55.35,
         "mfi": 44.78,
         "session": "REGULAR"
       },
@@ -2921,7 +3069,7 @@
         "Low": 347.48,
         "Close": 347.81,
         "Volume": 0,
-        "rsi": 55.88,
+        "rsi": 55.86,
         "mfi": 44.78,
         "session": "POST"
       },
@@ -2932,7 +3080,7 @@
         "Low": 326.11,
         "Close": 347.9,
         "Volume": 0,
-        "rsi": 56.32,
+        "rsi": 56.3,
         "mfi": 44.78,
         "session": "POST"
       },
@@ -2943,7 +3091,7 @@
         "Low": 347.01,
         "Close": 347.93,
         "Volume": 0,
-        "rsi": 56.48,
+        "rsi": 56.46,
         "mfi": 44.78,
         "session": "POST"
       },
@@ -2954,7 +3102,7 @@
         "Low": 347.88,
         "Close": 347.9,
         "Volume": 0,
-        "rsi": 56.26,
+        "rsi": 56.24,
         "mfi": 44.78,
         "session": "POST"
       },
@@ -2965,7 +3113,7 @@
         "Low": 347.37,
         "Close": 348.12,
         "Volume": 0,
-        "rsi": 57.54,
+        "rsi": 57.52,
         "mfi": 44.78,
         "session": "PRE"
       },
@@ -2976,7 +3124,7 @@
         "Low": 347.47,
         "Close": 347.56,
         "Volume": 0,
-        "rsi": 53.26,
+        "rsi": 53.25,
         "mfi": 44.78,
         "session": "PRE"
       },
@@ -2987,7 +3135,7 @@
         "Low": 347.47,
         "Close": 347.69,
         "Volume": 0,
-        "rsi": 54.15,
+        "rsi": 54.13,
         "mfi": 44.78,
         "session": "PRE"
       },
@@ -2998,7 +3146,7 @@
         "Low": 345.78,
         "Close": 346.22,
         "Volume": 0,
-        "rsi": 44.28,
+        "rsi": 44.26,
         "mfi": 68.55,
         "session": "PRE"
       },
@@ -3009,7 +3157,7 @@
         "Low": 345.33,
         "Close": 345.69,
         "Volume": 0,
-        "rsi": 41.37,
+        "rsi": 41.36,
         "mfi": 56.75,
         "session": "PRE"
       },
@@ -3020,7 +3168,7 @@
         "Low": 345.76,
         "Close": 346.72,
         "Volume": 0,
-        "rsi": 48.47,
+        "rsi": 48.45,
         "mfi": 44.2,
         "session": "PRE"
       },
@@ -3031,7 +3179,7 @@
         "Low": 343.07,
         "Close": 344.19,
         "Volume": 4951400,
-        "rsi": 36.7,
+        "rsi": 36.69,
         "mfi": 24.49,
         "session": "REGULAR"
       },
@@ -3042,7 +3190,7 @@
         "Low": 344.07,
         "Close": 345.24,
         "Volume": 1925020,
-        "rsi": 42.92,
+        "rsi": 42.91,
         "mfi": 30.63,
         "session": "REGULAR"
       },
@@ -3053,7 +3201,7 @@
         "Low": 345.22,
         "Close": 345.84,
         "Volume": 1829045,
-        "rsi": 46.14,
+        "rsi": 46.13,
         "mfi": 36.0,
         "session": "REGULAR"
       },
@@ -3064,7 +3212,7 @@
         "Low": 345.29,
         "Close": 347.01,
         "Volume": 1217094,
-        "rsi": 51.88,
+        "rsi": 51.87,
         "mfi": 50.17,
         "session": "REGULAR"
       },
@@ -3097,7 +3245,7 @@
         "Low": 349.11,
         "Close": 350.37,
         "Volume": 2374545,
-        "rsi": 64.47,
+        "rsi": 64.46,
         "mfi": 68.64,
         "session": "REGULAR"
       },
@@ -3119,7 +3267,7 @@
         "Low": 348.7,
         "Close": 349.6,
         "Volume": 0,
-        "rsi": 59.71,
+        "rsi": 59.7,
         "mfi": 68.64,
         "session": "PRE"
       },
@@ -3130,7 +3278,7 @@
         "Low": 348.81,
         "Close": 349.05,
         "Volume": 0,
-        "rsi": 56.73,
+        "rsi": 56.72,
         "mfi": 68.64,
         "session": "PRE"
       },
@@ -3141,7 +3289,7 @@
         "Low": 348.3,
         "Close": 348.51,
         "Volume": 0,
-        "rsi": 53.89,
+        "rsi": 53.88,
         "mfi": 68.64,
         "session": "PRE"
       },
@@ -3152,7 +3300,7 @@
         "Low": 347.33,
         "Close": 347.71,
         "Volume": 0,
-        "rsi": 49.9,
+        "rsi": 49.89,
         "mfi": 68.64,
         "session": "PRE"
       },
@@ -3240,7 +3388,7 @@
         "Low": 346.97,
         "Close": 347.89,
         "Volume": 1668177,
-        "rsi": 47.43,
+        "rsi": 47.42,
         "mfi": 59.31,
         "session": "REGULAR"
       },
@@ -3251,7 +3399,7 @@
         "Low": 347.31,
         "Close": 348.3,
         "Volume": 1865732,
-        "rsi": 48.85,
+        "rsi": 48.84,
         "mfi": 58.12,
         "session": "REGULAR"
       },
@@ -3416,7 +3564,7 @@
         "Low": 351.61,
         "Close": 351.66,
         "Volume": 3150848,
-        "rsi": 54.43,
+        "rsi": 54.42,
         "mfi": 50.62,
         "session": "POST"
       },
@@ -5790,64 +5938,64 @@
         "Open": 291.86,
         "High": 294.03,
         "Low": 289.55,
-        "Close": 291.88,
+        "Close": 291.4,
+        "Volume": 0,
+        "rsi": 20.23,
+        "mfi": 70.28,
+        "session": "PRE"
+      },
+      {
+        "time": "2026-10-29T05:00:00-04:00",
+        "Open": 291.5,
+        "High": 292.36,
+        "Low": 291.01,
+        "Close": 291.73,
+        "Volume": 0,
+        "rsi": 20.93,
+        "mfi": 70.28,
+        "session": "PRE"
+      },
+      {
+        "time": "2026-10-29T06:00:00-04:00",
+        "Open": 291.73,
+        "High": 292.5,
+        "Low": 290.4,
+        "Close": 290.95,
         "Volume": 0,
         "rsi": 20.47,
         "mfi": 70.28,
         "session": "PRE"
       },
       {
-        "time": "2026-10-29T05:00:00-04:00",
-        "Open": 291.88,
-        "High": 292.36,
-        "Low": 291.01,
-        "Close": 292.27,
-        "Volume": 0,
-        "rsi": 21.3,
-        "mfi": 70.28,
-        "session": "PRE"
-      },
-      {
-        "time": "2026-10-29T06:00:00-04:00",
-        "Open": 292.3,
-        "High": 292.5,
-        "Low": 290.22,
-        "Close": 291.79,
-        "Volume": 0,
-        "rsi": 21.01,
-        "mfi": 70.28,
-        "session": "PRE"
-      },
-      {
         "time": "2026-10-29T07:00:00-04:00",
-        "Open": 291.85,
-        "High": 291.95,
-        "Low": 288.04,
-        "Close": 288.28,
+        "Open": 291.04,
+        "High": 292.0,
+        "Low": 289.37,
+        "Close": 289.67,
         "Volume": 0,
-        "rsi": 18.97,
+        "rsi": 19.71,
         "mfi": 61.39,
         "session": "PRE"
       },
       {
         "time": "2026-10-29T08:00:00-04:00",
-        "Open": 288.34,
-        "High": 288.96,
-        "Low": 286.89,
-        "Close": 288.29,
+        "Open": 289.7,
+        "High": 289.77,
+        "Low": 287.5,
+        "Close": 288.1,
         "Volume": 0,
-        "rsi": 19.0,
+        "rsi": 18.79,
         "mfi": 71.0,
         "session": "PRE"
       },
       {
         "time": "2026-10-29T09:00:00-04:00",
-        "Open": 288.3,
+        "Open": 288.15,
         "High": 288.99,
         "Low": 285.86,
         "Close": 286.94,
         "Volume": 0,
-        "rsi": 18.21,
+        "rsi": 18.12,
         "mfi": 79.84,
         "session": "PRE"
       },
@@ -5858,7 +6006,7 @@
         "Low": 280.36,
         "Close": 285.67,
         "Volume": 50723077,
-        "rsi": 17.47,
+        "rsi": 17.38,
         "mfi": 19.23,
         "session": "REGULAR"
       },
@@ -5869,7 +6017,7 @@
         "Low": 283.71,
         "Close": 286.92,
         "Volume": 16874188,
-        "rsi": 20.85,
+        "rsi": 20.78,
         "mfi": 37.27,
         "session": "REGULAR"
       },
@@ -5880,7 +6028,7 @@
         "Low": 284.43,
         "Close": 285.4,
         "Volume": 13055824,
-        "rsi": 19.8,
+        "rsi": 19.73,
         "mfi": 42.99,
         "session": "REGULAR"
       },
@@ -5891,7 +6039,7 @@
         "Low": 283.34,
         "Close": 283.38,
         "Volume": 9201079,
-        "rsi": 18.45,
+        "rsi": 18.38,
         "mfi": 33.45,
         "session": "REGULAR"
       },
@@ -5902,7 +6050,7 @@
         "Low": 281.3,
         "Close": 281.91,
         "Volume": 10843860,
-        "rsi": 17.52,
+        "rsi": 17.44,
         "mfi": 29.87,
         "session": "REGULAR"
       },
@@ -5913,7 +6061,7 @@
         "Low": 281.31,
         "Close": 282.93,
         "Volume": 10400095,
-        "rsi": 20.53,
+        "rsi": 20.47,
         "mfi": 36.4,
         "session": "REGULAR"
       },
@@ -5924,7 +6072,7 @@
         "Low": 281.9,
         "Close": 283.75,
         "Volume": 13010007,
-        "rsi": 22.95,
+        "rsi": 22.9,
         "mfi": 43.04,
         "session": "REGULAR"
       },
@@ -5934,9 +6082,9 @@
         "High": 283.94,
         "Low": 281.0,
         "Close": 282.13,
-        "Volume": 9106412,
-        "rsi": 21.55,
-        "mfi": 40.12,
+        "Volume": 0,
+        "rsi": 21.5,
+        "mfi": 43.04,
         "session": "POST"
       },
       {
@@ -5946,8 +6094,8 @@
         "Low": 281.01,
         "Close": 281.62,
         "Volume": 0,
-        "rsi": 21.12,
-        "mfi": 40.12,
+        "rsi": 21.06,
+        "mfi": 43.04,
         "session": "POST"
       },
       {
@@ -5957,8 +6105,8 @@
         "Low": 280.36,
         "Close": 280.41,
         "Volume": 0,
-        "rsi": 20.08,
-        "mfi": 40.12,
+        "rsi": 20.02,
+        "mfi": 43.04,
         "session": "POST"
       },
       {
@@ -5966,10 +6114,21 @@
         "Open": 280.41,
         "High": 280.74,
         "Low": 280.0,
-        "Close": 280.56,
+        "Close": 280.66,
         "Volume": 0,
-        "rsi": 20.6,
-        "mfi": 40.12,
+        "rsi": 20.89,
+        "mfi": 43.04,
+        "session": "POST"
+      },
+      {
+        "time": "2026-10-29T20:00:00-04:00",
+        "Open": 280.66,
+        "High": 280.66,
+        "Low": 280.66,
+        "Close": 280.66,
+        "Volume": 0,
+        "rsi": 20.89,
+        "mfi": 43.04,
         "session": "POST"
       }
     ],
@@ -8476,13 +8635,13 @@
       },
       {
         "time": "2026-10-29T00:00:00-04:00",
-        "Open": 286.77,
+        "Open": 286.88,
         "High": 288.33,
         "Low": 280.36,
         "Close": 283.82,
-        "Volume": 138462344,
+        "Volume": 138898500,
         "rsi": 22.32,
-        "mfi": 32.94
+        "mfi": 32.91
       }
     ]
   }

@@ -192,7 +192,7 @@ def main():
     p_a = googl_f.get("currentPrice", 280.56)
     p_c = goog_f.get("currentPrice", 279.10)
     
-    # 2. Extract dynamic official earnings data
+    # 2. Extract dynamic official earnings data & volatility alert
     earnings = googl_data.get("earnings_brief") or googl_data.get("earnings_flash") or {}
     quarter = earnings.get("quarter", "최신 공식 분기")
     rep_date = earnings.get("reportDate", "최근 공시")
@@ -204,6 +204,13 @@ def main():
     opm = earnings.get("operatingMargins", 34.0)
     next_date = earnings.get("nextEarningsDate", "차기 분기 공시 예정")
     next_eps_est = earnings.get("nextEpsEstimate", 3.21)
+
+    # Volatility Alert context (>= 3.0% moves)
+    vol_alert = googl_data.get("volatility_alert") or {}
+    vol_triggered = vol_alert.get("triggered", False)
+    vol_pct = vol_alert.get("changePercent", googl_f.get("changePercent", 0.0))
+    vol_headline = vol_alert.get("headline", "")
+    vol_reason = vol_alert.get("primaryReason", "")
 
     pe = googl_f.get("trailingPE", 14.6)
     fpe = round(googl_f.get("forwardPE", 18.8), 1)
@@ -231,10 +238,11 @@ def main():
     if model:
         print(f"[Ollama] Detected local model: {model}. Synthesizing 4 Alphabet investor reports with dynamic official metrics ({quarter})...")
         try:
-            # 1. Memo (Dynamic)
+            # 1. Memo (Dynamic with Volatility Focus)
+            vol_snippet = f"- [🚨 긴급 시장 변동성 경보]: 주가 {vol_pct:+.2f}% 급변 감지 | 원인: {vol_reason}\n" if vol_triggered else ""
             u_memo = f"""[알파벳(Alphabet Inc.) {quarter} 최신 공식 실적 및 실시간 퀀트 리서치 메모 작성]
 - 기준 시세: GOOGL 현재가 ${p_a} | 52주 범위: ${googl_f.get('fiftyTwoWeekLow', 270.7)} ~ ${googl_f.get('fiftyTwoWeekHigh', 408.61)}
-- 공식 실적 데이터 ({quarter}, 발표일: {rep_date}):
+{vol_snippet}- 공식 실적 데이터 ({quarter}, 발표일: {rep_date}):
   * 매출: ${rev}B (성장률: +{rev_yoy}% YoY)
   * 주당순이익(EPS): ${eps} (월가 예상: ${eps_est}, 서프라이즈: {surprise}%)
   * 영업이익률: {opm}%
@@ -245,7 +253,7 @@ def main():
 핵심 내용을 다음 순서로 간결하고 임팩트 있게 요약해 주세요:
 1. 📊 {quarter} 실적 팩트체크: 매출 및 주당순이익(EPS) 성과와 월가 컨센서스 비교
 2. 🚀 핵심 사업 성장 엔진 (Google Cloud, AI Search, YouTube) 및 마진 구조
-3. 📉 최근 시장 주가 변동성 및 투자 심리 진단
+3. 📉 최근 시장 주가 변동성({vol_pct:+.2f}%) 심층 원인 진단 및 단기 수급 분석
 4. 🎯 최종 투자 의견(STRONG BUY) 및 추천 매수 밴드"""
             memo_text = call_ollama(model, system_prompt, u_memo)
 
@@ -320,6 +328,7 @@ def main():
             "trailing_pe": pe,
             "latest_quarter": quarter,
             "next_earnings_date": next_date,
+            "volatility_alert": vol_alert,
             "recommendation": googl_f.get("recommendationKey", "strong_buy"),
         },
         "reports": {

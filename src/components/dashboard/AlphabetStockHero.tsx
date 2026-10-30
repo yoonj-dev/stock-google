@@ -13,6 +13,7 @@ import { StockFundamentals, Candle } from '../../types/stock';
 import { formatCurrency, formatLargeNumber, formatPercent } from '../../lib/stockApi';
 import { IntradayMiniChart } from './IntradayMiniChart';
 import { EarningsFlashBanner } from './EarningsFlashBanner';
+import { MarketVolatilityAlertBanner } from './MarketVolatilityAlertBanner';
 
 interface AlphabetStockHeroProps {
   googl: StockFundamentals;
@@ -136,8 +137,13 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
 
   return (
     <div className="w-full space-y-4">
-      {/* 공식 실적 및 차기 발표 동적 배너 (Dynamic Earnings Brief) */}
-      <EarningsFlashBanner flash={currentStock.earningsBrief || currentStock.earningsFlash} />
+      {/* 3% 이상 대규모 변동성 긴급 분석 배너 & 공식 실적 배너 허브 */}
+      <MarketVolatilityAlertBanner
+        alert={currentStock.volatilityAlert}
+        flash={currentStock.earningsBrief || currentStock.earningsFlash}
+        liveChangePercent={headlineChangePercent}
+        ticker={activeTicker}
+      />
 
       {/* 1. Main Executive Header Card */}
       <div className="fintech-card p-4 sm:p-6 space-y-4 sm:space-y-5">

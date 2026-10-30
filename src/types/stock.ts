@@ -10,6 +10,35 @@ export interface Candle {
   session?: 'PRE' | 'REGULAR' | 'POST';
 }
 
+export interface VolatilityCatalystNews {
+  title: string;
+  source: string;
+  link: string;
+  pubDate: string;
+}
+
+export interface VolatilityDriver {
+  title: string;
+  description: string;
+  type: 'negative' | 'positive' | 'warning' | 'info';
+}
+
+export interface MarketVolatilityAlert {
+  triggered: boolean;
+  direction: 'SURGE' | 'PLUNGE' | 'NORMAL';
+  changePercent: number;
+  changeAmount: number;
+  sessionPrice: number;
+  threshold: number; // 3.0
+  headline: string;
+  primaryReason: string;
+  drivers: VolatilityDriver[];
+  institutionalVerdict: string;
+  actionGuide: string;
+  relatedNews: VolatilityCatalystNews[];
+  detectedAt: string;
+}
+
 export interface EarningsFlash {
   quarter: string; // e.g. "2026 Q3"
   reportDate?: string; // "2026-10-28"
@@ -86,6 +115,8 @@ export interface StockFundamentals {
   preMarketChange?: number;
   preMarketChangePercent?: number;
   earningsFlash?: EarningsFlash;
+  earningsBrief?: EarningsFlash;
+  volatilityAlert?: MarketVolatilityAlert;
   targetHighPrice?: number;
   targetLowPrice?: number;
   targetMeanPrice?: number;
@@ -118,6 +149,8 @@ export interface StockData {
     '1w'?: Candle[];
   };
   earnings_flash?: EarningsFlash;
+  earnings_brief?: EarningsFlash;
+  volatility_alert?: MarketVolatilityAlert;
   ai_prompts?: {
     momentum?: string;
     comprehensive?: string;
