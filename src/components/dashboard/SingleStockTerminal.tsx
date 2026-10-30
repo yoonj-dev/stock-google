@@ -4,6 +4,8 @@ import {
   BrainCircuit,
   Layers,
   Calculator,
+  Users,
+  PieChart,
 } from 'lucide-react';
 import { StockFundamentals, Candle } from '../../types/stock';
 import { SingleStockProfile } from '../../types/stockConfig';
@@ -13,8 +15,10 @@ import { TradingViewSection } from './TradingViewSection';
 import { LocalLlmSynthesizer } from './LocalLlmSynthesizer';
 import { AlphabetSixPillars } from './AlphabetSixPillars';
 import { ValuationCalculator } from './ValuationCalculator';
+import { PeerIntelligenceMatrix } from './PeerIntelligenceMatrix';
+import { SegmentMomentumTracker } from './SegmentMomentumTracker';
 
-export type WorkspaceTabId = 'chart' | 'ai_memo' | 'moat' | 'valuation';
+export type WorkspaceTabId = 'chart' | 'ai_memo' | 'segments' | 'peers' | 'moat' | 'valuation';
 
 interface SingleStockTerminalProps {
   profile: SingleStockProfile;
@@ -58,6 +62,20 @@ export const SingleStockTerminal: React.FC<SingleStockTerminalProps> = ({
       shortLabel: 'AI 리포트',
       icon: <BrainCircuit className="w-4 h-4" />,
       badge: 'Gemma 4',
+    },
+    {
+      id: 'segments' as const,
+      label: '사업부문별 실적 기여도',
+      shortLabel: '부문 실적',
+      icon: <PieChart className="w-4 h-4" />,
+      badge: '10-Q',
+    },
+    {
+      id: 'peers' as const,
+      label: '빅테크 5사 상대가치',
+      shortLabel: '피어 비교',
+      icon: <Users className="w-4 h-4" />,
+      badge: 'Peer',
     },
     {
       id: 'moat' as const,
@@ -144,6 +162,14 @@ export const SingleStockTerminal: React.FC<SingleStockTerminalProps> = ({
                 externalQuestion={activeAiQuestion}
                 onQuestionHandled={() => setActiveAiQuestion(undefined)}
               />
+            )}
+
+            {activeTab === 'segments' && (
+              <SegmentMomentumTracker />
+            )}
+
+            {activeTab === 'peers' && (
+              <PeerIntelligenceMatrix />
             )}
 
             {activeTab === 'moat' && (

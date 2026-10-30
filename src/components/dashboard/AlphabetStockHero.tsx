@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   TrendingUp,
   TrendingDown,
@@ -8,6 +8,7 @@ import {
   BarChart2,
   PieChart,
   Target,
+  Activity,
 } from 'lucide-react';
 import { StockFundamentals, Candle } from '../../types/stock';
 import { formatCurrency, formatLargeNumber, formatPercent } from '../../lib/stockApi';
@@ -94,6 +95,21 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
   const headlineChange = isExtendedActive ? extChange! : regChange;
   const headlineChangePercent = isExtendedActive ? extChangePercent! : regChangePercent;
   const isHeadlinePositive = headlineChange >= 0;
+
+  // Real-time Glow Pulse on price updates
+  const prevPriceRef = useRef<number>(headlinePrice);
+  const [glowState, setGlowState] = useState<'UP' | 'DOWN' | null>(null);
+
+  useEffect(() => {
+    if (prevPriceRef.current !== headlinePrice && prevPriceRef.current > 0) {
+      const isUp = headlinePrice > prevPriceRef.current;
+      setGlowState(isUp ? 'UP' : 'DOWN');
+      const timer = setTimeout(() => setGlowState(null), 1200);
+      prevPriceRef.current = headlinePrice;
+      return () => clearTimeout(timer);
+    }
+    prevPriceRef.current = headlinePrice;
+  }, [headlinePrice]);
 
   // Chart baseline for intraday mini chart
   const chartBaseline = isExtendedActive ? regPrice : regPrevClose;
@@ -224,8 +240,16 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
               )}
             </div>
 
-            {/* Headline Price & Session Change */}
-            <div className="flex items-baseline gap-2.5 sm:gap-3 flex-wrap">
+            {/* Headline Price & Session Change with Real-time Glow Pulse */}
+            <div
+              className={`flex items-baseline gap-2.5 sm:gap-3 flex-wrap p-1.5 -ml-1.5 rounded-xl transition-all duration-300 ${
+                glowState === 'UP'
+                  ? 'bg-emerald-500/15 ring-2 ring-emerald-500/50 shadow-md shadow-emerald-500/10'
+                  : glowState === 'DOWN'
+                  ? 'bg-rose-500/15 ring-2 ring-rose-500/50 shadow-md shadow-rose-500/10'
+                  : ''
+              }`}
+            >
               <span className="text-3xl sm:text-4xl font-black font-mono tracking-tight text-slate-900 dark:text-white tabular-nums">
                 {formatCurrency(headlinePrice)}
               </span>

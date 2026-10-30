@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
 import { StockFundamentals, Candle } from '../../types/stock';
 import { SingleStockProfile } from '../../types/stockConfig';
@@ -87,6 +87,21 @@ export const StockTickerRibbon: React.FC<StockTickerRibbonProps> = ({
   const targetMean = currentStock.targetMeanPrice || 205.0;
   const upsidePercent = headlinePrice > 0 ? (((targetMean - headlinePrice) / headlinePrice) * 100).toFixed(1) : '15.0';
 
+  // Real-time Glow Pulse on price updates
+  const prevPriceRef = useRef<number>(headlinePrice);
+  const [glowState, setGlowState] = useState<'UP' | 'DOWN' | null>(null);
+
+  useEffect(() => {
+    if (prevPriceRef.current !== headlinePrice && prevPriceRef.current > 0) {
+      const isUp = headlinePrice > prevPriceRef.current;
+      setGlowState(isUp ? 'UP' : 'DOWN');
+      const timer = setTimeout(() => setGlowState(null), 1200);
+      prevPriceRef.current = headlinePrice;
+      return () => clearTimeout(timer);
+    }
+    prevPriceRef.current = headlinePrice;
+  }, [headlinePrice]);
+
   const sessionBadge = {
     REGULAR: { label: '정규장 실시간', dot: 'bg-emerald-500 animate-pulse', bg: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/25' },
     PRE: { label: '프리마켓', dot: 'bg-amber-500 animate-pulse', bg: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/25' },
@@ -150,8 +165,16 @@ export const StockTickerRibbon: React.FC<StockTickerRibbonProps> = ({
             </div>
           </div>
 
-          {/* Price & Change Display */}
-          <div className="flex items-baseline gap-2.5 pl-0 sm:pl-3 sm:border-l border-slate-200 dark:border-zinc-800">
+          {/* Price & Change Display with Real-time Glow Pulse */}
+          <div
+            className={`flex items-baseline gap-2.5 pl-0 sm:pl-3 sm:border-l border-slate-200 dark:border-zinc-800 p-1 rounded-xl transition-all duration-300 ${
+              glowState === 'UP'
+                ? 'bg-emerald-500/15 ring-2 ring-emerald-500/50 shadow-md shadow-emerald-500/10'
+                : glowState === 'DOWN'
+                ? 'bg-rose-500/15 ring-2 ring-rose-500/50 shadow-md shadow-rose-500/10'
+                : ''
+            }`}
+          >
             <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-zinc-100 font-mono tracking-tight tabular-nums">
               {formatCurrency(headlinePrice)}
             </span>

@@ -1,0 +1,6 @@
+# CHANGELOG: Alphabet on Tap (stock-google)
+- 2026-10-30 [UI/UX] [feat] Add real-time price glow pulse and visual refresh micro-interaction (Ref: PLAN-20261030-ALPHABET-HERMES)
+- 2026-10-30 [PeerMatrix] [feat] Add PeerIntelligenceMatrix comparing GOOGL with MSFT, AMZN, META, AAPL across 3 view modes (Ref: PLAN-20261030-ALPHABET-HERMES)
+- 2026-10-30 [Segments] [feat] Add SegmentMomentumTracker visualizing official 10-Q revenue mix and Cloud margin leverage (Ref: PLAN-20261030-ALPHABET-HERMES)
+- 2026-10-30 [Valuation] [feat] Add institutional scenario engine with 3 preset sensitivity models in ValuationCalculator (Ref: PLAN-20261030-ALPHABET-HERMES)
+- 2026-10-30 [Terminal] [refactor] Integrate segments and peers into SingleStockTerminal workspace tabs (Ref: PLAN-20261030-ALPHABET-HERMES)
