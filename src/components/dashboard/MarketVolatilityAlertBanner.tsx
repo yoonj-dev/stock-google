@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  AlertTriangle,
   TrendingDown,
   TrendingUp,
   ExternalLink,
@@ -10,11 +9,13 @@ import {
   Compass,
   FileText,
   Sparkles,
-  Info,
+  Scale,
+  Cpu,
+  Car,
   Calendar,
-  Layers,
+  AlertCircle,
 } from 'lucide-react';
-import { MarketVolatilityAlert, EarningsFlash } from '../../types/stock';
+import { MarketVolatilityAlert, EarningsFlash, MajorIssueCategory } from '../../types/stock';
 import { EarningsFlashBanner } from './EarningsFlashBanner';
 
 interface MarketVolatilityAlertBannerProps {
@@ -33,55 +34,92 @@ export const MarketVolatilityAlertBanner: React.FC<MarketVolatilityAlertBannerPr
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [showEarningsModal, setShowEarningsModal] = useState<boolean>(false);
 
-  // Trigger if backend marked triggered OR client-side live change >= 3%
+  // Trigger if backend marked triggered (price volatility OR major catalyst) OR client-side live change >= 3%
   const isTriggered = Boolean(alert?.triggered || Math.abs(liveChangePercent) >= 3.0);
 
-  // If volatility alert is not triggered (< 3% change), render standard earnings / schedule banner
+  // If no major alert is active (< 3% change and no major issues), render standard earnings / schedule banner
   if (!isTriggered) {
     return <EarningsFlashBanner flash={flash} />;
   }
 
-  // Determine direction
+  const category: MajorIssueCategory = alert?.category || 'PRICE_VOLATILITY';
   const isPlunge = (alert?.direction === 'PLUNGE') || liveChangePercent < 0;
   const pctDisplay = alert?.changePercent != null
     ? `${alert.changePercent > 0 ? '+' : ''}${alert.changePercent.toFixed(2)}%`
     : `${liveChangePercent > 0 ? '+' : ''}${liveChangePercent.toFixed(2)}%`;
 
+  // Theme configuration based on detected major issue category
+  const getThemeClasses = () => {
+    switch (category) {
+      case 'ANTITRUST_LEGAL':
+        return {
+          wrapper: 'bg-gradient-to-r from-purple-500/12 via-indigo-500/10 to-slate-500/10 dark:from-purple-500/20 dark:via-indigo-500/15 dark:to-zinc-900 border-purple-500/35 dark:border-purple-400/35',
+          badge: 'bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30',
+          icon: <Scale className="w-3.5 h-3.5 stroke-[2.5]" />,
+          title: `⚖️ [사법·반독점 중대 이슈] 미 법무부(DOJ) 구제책 판결 영향 분석 (${pctDisplay})`,
+        };
+      case 'AI_SILICON':
+        return {
+          wrapper: 'bg-gradient-to-r from-blue-500/12 via-cyan-500/10 to-indigo-500/10 dark:from-blue-500/20 dark:via-cyan-500/15 dark:to-zinc-900 border-blue-500/35 dark:border-blue-400/35',
+          badge: 'bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30',
+          icon: <Cpu className="w-3.5 h-3.5 stroke-[2.5]" />,
+          title: `🧠 [AI·자체 TPU 중대 혁신] 구글 TPU 수주 및 Gemini 모멘텀 (${pctDisplay})`,
+        };
+      case 'WAYMO_AUTONOMOUS':
+        return {
+          wrapper: 'bg-gradient-to-r from-emerald-500/12 via-teal-500/10 to-blue-500/10 dark:from-emerald-500/20 dark:via-teal-500/15 dark:to-zinc-900 border-teal-500/35 dark:border-teal-400/35',
+          badge: 'bg-teal-500/20 text-teal-700 dark:text-teal-300 border-teal-500/30',
+          icon: <Car className="w-3.5 h-3.5 stroke-[2.5]" />,
+          title: `🚗 [Waymo 자율주행 속보] 로보택시 상용화 및 서비스 확대 (${pctDisplay})`,
+        };
+      case 'EARNINGS_CATALYST':
+        return {
+          wrapper: 'bg-gradient-to-r from-amber-500/12 via-rose-500/10 to-indigo-500/10 dark:from-amber-500/20 dark:via-rose-500/15 dark:to-zinc-900 border-amber-500/35 dark:border-amber-400/35',
+          badge: 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30',
+          icon: <Calendar className="w-3.5 h-3.5 stroke-[2.5]" />,
+          title: `📊 [공식 실적 속보] ${flash?.quarter || '최근 분기'} 실적 및 가이던스 긴급 진단 (${pctDisplay})`,
+        };
+      case 'PRICE_VOLATILITY':
+      default:
+        if (isPlunge) {
+          return {
+            wrapper: 'bg-gradient-to-r from-rose-500/12 via-amber-500/10 to-slate-500/10 dark:from-rose-500/20 dark:via-amber-500/15 dark:to-zinc-900 border-rose-500/35 dark:border-rose-400/35',
+            badge: 'bg-rose-500/20 text-rose-700 dark:text-rose-300 border-rose-500/30',
+            icon: <TrendingDown className="w-3.5 h-3.5 animate-bounce stroke-[2.5]" />,
+            title: `🚨 3% 이상 대규모 급락 긴급 진단 (${pctDisplay})`,
+          };
+        } else {
+          return {
+            wrapper: 'bg-gradient-to-r from-emerald-500/12 via-blue-500/10 to-indigo-500/10 dark:from-emerald-500/20 dark:via-blue-500/15 dark:to-zinc-900 border-emerald-500/35 dark:border-emerald-400/35',
+            badge: 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
+            icon: <TrendingUp className="w-3.5 h-3.5 animate-bounce stroke-[2.5]" />,
+            title: `🚀 3% 이상 대규모 급등 랠리 긴급 진단 (${pctDisplay})`,
+          };
+        }
+    }
+  };
+
+  const theme = getThemeClasses();
+
   return (
     <div className="w-full space-y-2">
-      <div
-        className={`w-full rounded-2xl transition-all duration-200 border p-3.5 sm:p-4 shadow-sm ${
-          isPlunge
-            ? 'bg-gradient-to-r from-rose-500/12 via-amber-500/10 to-slate-500/10 dark:from-rose-500/20 dark:via-amber-500/15 dark:to-zinc-900 border-rose-500/35 dark:border-rose-400/35'
-            : 'bg-gradient-to-r from-emerald-500/12 via-blue-500/10 to-indigo-500/10 dark:from-emerald-500/20 dark:via-blue-500/15 dark:to-zinc-900 border-emerald-500/35 dark:border-emerald-400/35'
-        }`}
-      >
+      <div className={`w-full rounded-2xl transition-all duration-200 border p-3.5 sm:p-4 shadow-sm ${theme.wrapper}`}>
         {/* Top Header Strip */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Left: Badge & Quick Headline */}
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-bold text-xs border ${
-                isPlunge
-                  ? 'bg-rose-500/20 text-rose-700 dark:text-rose-300 border-rose-500/30'
-                  : 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
-              }`}
-            >
-              {isPlunge ? (
-                <>
-                  <TrendingDown className="w-3.5 h-3.5 animate-bounce stroke-[2.5]" />
-                  <span>🚨 3% 이상 대규모 급락 긴급 진단 ({pctDisplay})</span>
-                </>
-              ) : (
-                <>
-                  <TrendingUp className="w-3.5 h-3.5 animate-bounce stroke-[2.5]" />
-                  <span>🚀 3% 이상 대규모 급등 랠리 긴급 진단 ({pctDisplay})</span>
-                </>
-              )}
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-bold text-xs border ${theme.badge}`}>
+              {theme.icon}
+              <span>{theme.title}</span>
             </span>
 
             <span className="text-[11px] text-slate-500 dark:text-zinc-400 font-medium">
-              변동성 임계치(3.0%) 초과 감지 · {alert?.detectedAt || '실시간 퀀트 조사'}
+              {alert?.triggerReason === 'BOTH'
+                ? '대규모 가격 급변 및 중대 촉매 동시 감지'
+                : alert?.triggerReason === 'MAJOR_CATALYST'
+                ? '글로벌 주요 이슈 감지'
+                : '변동성 임계치(3.0%) 초과 감지'}{' '}
+              · {alert?.detectedAt || '실시간 퀀트 조사'}
             </span>
           </div>
 
@@ -102,7 +140,7 @@ export const MarketVolatilityAlertBanner: React.FC<MarketVolatilityAlertBannerPr
               onClick={() => setIsExpanded(!isExpanded)}
               className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/90 dark:bg-zinc-800/90 text-slate-700 dark:text-zinc-200 hover:bg-white dark:hover:bg-zinc-700 border border-slate-200 dark:border-zinc-700 text-xs font-semibold transition-all cursor-pointer"
             >
-              <span>{isExpanded ? '접기' : '변동 원인 분석'}</span>
+              <span>{isExpanded ? '접기' : '세부 분석'}</span>
               {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
             </button>
           </div>
@@ -111,7 +149,10 @@ export const MarketVolatilityAlertBanner: React.FC<MarketVolatilityAlertBannerPr
         {/* Primary Reason Headline Strip */}
         <div className="mt-2.5 text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-100 flex items-start gap-1.5 leading-relaxed">
           <span className="shrink-0 text-amber-500 mt-0.5">⚡</span>
-          <span>{alert?.primaryReason || `${ticker} 주가가 당일 세션에서 ${pctDisplay}의 유의미한 변동을 보이고 있어 주요 원인과 기관 수급을 긴급 점검합니다.`}</span>
+          <span>
+            {alert?.primaryReason ||
+              `${ticker}에 유의미한 시장 영향({${pctDisplay}})을 미치는 핵심 이슈가 포착되어 긴급 점검을 진행합니다.`}
+          </span>
         </div>
 
         {/* Expanded Detailed Analysis */}
@@ -123,18 +164,18 @@ export const MarketVolatilityAlertBanner: React.FC<MarketVolatilityAlertBannerPr
                 ? alert.drivers
                 : [
                     {
-                      title: '단기 실적 및 가이던스 반응',
-                      description: '공식 분기 실적 발표에 따른 시장 눈높이 재조정 및 단기 수급 쏠림 현상.',
-                      type: isPlunge ? 'negative' : 'positive',
-                    },
-                    {
-                      title: '빅테크 AI 인프라 CapEx 재평가',
-                      description: 'TPU 클러스터 및 데이터센터 설비투자와 단기 잉여현금흐름(FCF) 간의 상충 우려/기대.',
+                      title: '사법 및 규제 리스크 파급력',
+                      description: '미 법무부 반독점 구제책 및 검색 시장 점유율에 대한 구조적 영향 평가.',
                       type: 'warning',
                     },
                     {
-                      title: '기술적 지지선 및 밸류에이션 버팀목',
-                      description: '50일/200일 이동평균선 지지 여부 및 연간 $70B 자사주 매입 하방 안전마진.',
+                      title: '자체 AI 실리콘(TPU) 및 클라우드 성장',
+                      description: 'OpenAI 등 대형 수주 모멘텀과 원가 50% 절감의 플랫폼 수직계열화.',
+                      type: 'positive',
+                    },
+                    {
+                      title: '밸류에이션 및 주주환원 안전마진',
+                      description: 'Forward P/E 18.8x 바닥 영역 및 연간 $70B 자사주 매입 방어선.',
                       type: 'info',
                     },
                   ]

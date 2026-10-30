@@ -23,9 +23,22 @@ export interface VolatilityDriver {
   type: 'negative' | 'positive' | 'warning' | 'info';
 }
 
+export type MajorIssueCategory =
+  | 'PRICE_VOLATILITY' // 3%+ 주가 급등/급락
+  | 'ANTITRUST_LEGAL'  // DOJ 반독점 소송, Chrome 분할, 법원 명령
+  | 'AI_SILICON'       // TPU 대형 수주, Gemini 혁신, 엔터프라이즈 AI
+  | 'WAYMO_AUTONOMOUS' // Waymo 로보택시 상용화, 서비스 확대
+  | 'EARNINGS_CATALYST'// 분기 실적 서프라이즈/미스, CapEx
+  | 'LEADERSHIP_MNA'   // 리더십 교체, 대규모 M&A, 주주환원
+  | 'GENERAL_MARKET';  // 일반 시장 흐름
+
 export interface MarketVolatilityAlert {
   triggered: boolean;
-  direction: 'SURGE' | 'PLUNGE' | 'NORMAL';
+  triggerReason: 'PRICE_VOLATILITY' | 'MAJOR_CATALYST' | 'BOTH' | 'NONE';
+  category: MajorIssueCategory;
+  categoryLabel: string;
+  severity: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'NORMAL';
+  direction: 'SURGE' | 'PLUNGE' | 'NEUTRAL';
   changePercent: number;
   changeAmount: number;
   sessionPrice: number;
