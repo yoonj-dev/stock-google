@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko" suppressHydrationWarning>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="google-adsense-account" content="ca-pub-3683251602683857" />
+    <meta name="description" content="Alphabet on Tap - 알파벳(GOOGL/GOOG) 실시간 시세, Q3 실적 속보, 기관 퀀트 리서치 및 밸류에이션 인텔리전스 허브" />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3683251602683857" crossorigin="anonymous"></script>
+    
+    <!-- Open Graph / SEO -->
+    <meta property="og:title" content="Alphabet on Tap - Alphabet (GOOGL · GOOG) Investor Hub" />
+    <meta property="og:site_name" content="Alphabet on Tap" />
+    <meta property="og:description" content="알파벳(GOOGL/GOOG) 실시간 장외 시세, 실적 속보, 기관 퀀트 리서치 및 밸류에이션 종합 인텔리전스 허브" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/icons/Icon-512.png" />
+
+    <!-- iOS / Android Web App / PWA -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Alphabet on Tap" />
+    <meta name="theme-color" content="#09090b" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <!-- Fonts: Pretendard & JetBrains Mono for financial precision -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <title>Alphabet on Tap - Alphabet (GOOGL · GOOG) Investor Hub</title>
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Theme Initialization (Auto/Light/Dark FOUC prevention) -->
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('theme') || localStorage.getItem('stock_theme') || localStorage.getItem('alpha_theme');
+          var theme = (saved === 'light' || saved === 'dark')
+            ? saved
+            : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          var root = document.documentElement;
+          var body = document.body;
+          if (theme === 'light') {
+            root.classList.remove('dark');
+            root.classList.add('light');
+            root.style.colorScheme = 'light';
+            root.setAttribute('data-theme', 'light');
+          } else {
+            root.classList.add('dark');
+            root.classList.remove('light');
+            root.style.colorScheme = 'dark';
+            root.setAttribute('data-theme', 'dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-CXoY-Leo.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Vxx-nOnh.css">
+  </head>
+  <body class="bg-[#f4f5f7] text-slate-900 dark:bg-[#09090b] dark:text-zinc-100 antialiased min-h-screen transition-colors">
+    <div id="root"></div>
+    <div data-brand-ad data-app-key="stock-google" class="brand-ui-ad-slot"></div>
+
+    <!-- Brand-UI Floating Donation Widget -->
+    <script>
+      window.BrandUIConfig = {
+        appKey: 'stock-google',
+        concept: 'random',
+        donationButtonPosition: 'bottom-right',
+        theme: 'auto',
+        lang: 'auto'
+      };
+    </script>
+    <script src="https://brand-ui.on-tap.xyz/widget.js" async></script>
+  </body>
+</html>
