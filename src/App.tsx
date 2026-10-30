@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/layout/Header';
-import { AlphabetStockHero } from './components/dashboard/AlphabetStockHero';
-import { LocalLlmSynthesizer } from './components/dashboard/LocalLlmSynthesizer';
-import { TradingViewSection } from './components/dashboard/TradingViewSection';
-import { AlphabetSixPillars } from './components/dashboard/AlphabetSixPillars';
-import { ValuationCalculator } from './components/dashboard/ValuationCalculator';
+import { SingleStockTerminal } from './components/dashboard/SingleStockTerminal';
 import { Footer } from './components/layout/Footer';
-import { Theme, getInitialTheme, applyThemeToDom } from './lib/theme';
+import { Theme, getInitialTheme, applyThemeToDom, resolveTheme } from './lib/theme';
 import { fetchStockData } from './lib/stockApi';
 import { MOCK_GOOGL_DATA, MOCK_GOOG_DATA } from './data/mockSnapshot';
 import { StockData } from './types/stock';
+import { GOOGLE_PROFILE } from './lib/profiles/googleProfile';
 
 export const App: React.FC = () => {
   const [currentTheme, setCurrentTheme] = useState<Theme>(getInitialTheme);
@@ -51,6 +48,12 @@ export const App: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const activeCandles = activeChartTicker === 'GOOGL'
+    ? googlData.candles?.['1d_intraday']
+    : googData.candles?.['1d_intraday'];
+
+  const resolvedTheme = resolveTheme(currentTheme);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#f4f5f7] dark:bg-[#09090b] text-slate-900 dark:text-zinc-100 transition-colors">
       {/* 1. Standard Header with Context Menu */}
@@ -65,36 +68,19 @@ export const App: React.FC = () => {
         onRefresh={loadData}
       />
 
-      {/* 2. Main Dashboard Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 lg:px-6 py-5 sm:py-6 space-y-6">
-        {/* Executive Alphabet Investor Hero (GOOGL / GOOG Ticker Switcher & Key Fundamentals) */}
-        <AlphabetStockHero
+      {/* 2. Bento Interactive Terminal */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-5">
+        <SingleStockTerminal
+          profile={GOOGLE_PROFILE}
           googl={googl}
           goog={goog}
           activeTicker={activeChartTicker}
           onSelectTicker={setActiveChartTicker}
-          googlCandles={googlData.candles?.['1d_intraday']}
-          googCandles={googData.candles?.['1d_intraday']}
+          candles={activeCandles}
+          resolvedTheme={resolvedTheme}
+          isRefreshing={isRefreshing}
+          onRefresh={loadData}
         />
-
-        {/* Institutional Quantitative Research Station (In-Depth Investment Memo & Q&A) */}
-        <LocalLlmSynthesizer
-          googl={googl}
-          goog={goog}
-        />
-
-        {/* TradingView Chart & Multi-Perspective Analysis Suite */}
-        <TradingViewSection
-          theme={currentTheme}
-          activeTicker={activeChartTicker}
-          onTickerChange={setActiveChartTicker}
-        />
-
-        {/* Alphabet 6-Pillars Intelligence Deck */}
-        <AlphabetSixPillars />
-
-        {/* Reverse DCF Valuation Calculator & Wall Street Targets */}
-        <ValuationCalculator googl={googl} />
       </main>
 
       {/* 3. Global Footer */}

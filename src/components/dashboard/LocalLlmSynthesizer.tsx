@@ -24,6 +24,8 @@ import { fetchSynthesisData } from '../../lib/stockApi';
 interface LocalLlmSynthesizerProps {
   googl: StockFundamentals;
   goog: StockFundamentals;
+  externalQuestion?: string;
+  onQuestionHandled?: () => void;
 }
 
 type TabKey = SynthesisReportType | 'chat';
@@ -31,11 +33,24 @@ type TabKey = SynthesisReportType | 'chat';
 export const LocalLlmSynthesizer: React.FC<LocalLlmSynthesizerProps> = ({
   googl,
   goog,
+  externalQuestion,
+  onQuestionHandled,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>('memo');
   const [synthesisData, setSynthesisData] = useState<LlmSynthesisData | null>(null);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
+
+  // Auto-respond when externalQuestion is passed from Quick AI Dock
+  useEffect(() => {
+    if (externalQuestion) {
+      setActiveTab('chat');
+      setChatInput(externalQuestion);
+      if (onQuestionHandled) {
+        onQuestionHandled();
+      }
+    }
+  }, [externalQuestion, onQuestionHandled]);
 
   // Chat conversation
   const [chatMessages, setChatMessages] = useState<OllamaChatMessage[]>([

@@ -7,6 +7,8 @@
 
 export type Theme = 'dark' | 'light';
 
+export const resolveTheme = (theme: Theme): Theme => theme;
+
 export const getInitialTheme = (): Theme => {
   if (typeof window === 'undefined') return 'dark';
   try {
