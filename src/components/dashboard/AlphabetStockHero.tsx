@@ -136,8 +136,8 @@ export const AlphabetStockHero: React.FC<AlphabetStockHeroProps> = ({
 
   return (
     <div className="w-full space-y-4">
-      {/* 🚨 2026 Q3 실적 속보 & 장외 긴급 진단 배너 */}
-      <EarningsFlashBanner flash={currentStock.earningsFlash} />
+      {/* 공식 실적 및 차기 발표 동적 배너 (Dynamic Earnings Brief) */}
+      <EarningsFlashBanner flash={currentStock.earningsBrief || currentStock.earningsFlash} />
 
       {/* 1. Main Executive Header Card */}
       <div className="fintech-card p-4 sm:p-6 space-y-4 sm:space-y-5">

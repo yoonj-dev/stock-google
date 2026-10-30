@@ -30,34 +30,126 @@ os.makedirs(PUBLIC_DATA_DIR, exist_ok=True)
 
 TARGET_TICKERS = ["GOOGL", "GOOG"]
 
-# 2026 Q3 Official Earnings Flash (Reported October 28, 2026 post-market)
-OFFICIAL_EARNINGS_FLASH = {
-    "quarter": "2026 Q3",
-    "reportDate": "2026-10-28",
-    "revenue": 127.6,
-    "revenueYoY": 25.0,
-    "revenueEstimate": 122.5,
-    "revenueBeat": True,
-    "eps": 2.12,
-    "epsEstimate": 3.01,
-    "epsSurprisePercent": -29.5,
-    "epsBeat": False,
-    "epsMissReason": "SpaceX 투자 지분 비현금성 미실현 평가손실 -$8.2B 반영 (본업 영업이익 $40.6B +30% 성장)",
-    "cloudRevenue": 30.7,
-    "cloudYoY": 103.0,
-    "cloudOpIncome": 11.1,
-    "cloudOpMargin": 36.2,
-    "youtubeRevenue": 11.2,
-    "youtubeYoY": 9.0,
-    "searchRevenue": 63.4,
-    "searchYoY": 12.0,
-    "capex": 51.4,
-    "capexYoY": 114.2,
-    "fullYearCapexGuidance": "$195B ~ $205B (AI 기술 인프라 및 TPU 대량 배치)",
-    "afterMarketPrice": 292.50,
-    "afterMarketChangePercent": -9.97,
-    "keyTakeaway": "본업(클라우드 +103% 폭발적 성장, 검색 +12%)은 역대급 호실적을 달성했으나, 공격적인 AI CapEx($51.4B)와 SpaceX 평가손(-$8.2B)으로 인한 회계상 EPS 미스가 장외 투매 유발. 본업 펀더멘털은 견고함."
-}
+def extract_dynamic_earnings(stock, info):
+    """
+    Dynamically extracts official earnings reports, consensus, and calendar dates
+    from official exchange/SEC feeds via yfinance (earnings_dates, calendar, financials).
+    Eliminates rigid static quarter hardcoding.
+    """
+    now = datetime.now(ZoneInfo("America/New_York"))
+    res = {
+        "hasData": False,
+        "quarter": "최신 공식 분기",
+        "reportDate": None,
+        "revenue": None,
+        "revenueYoY": None,
+        "revenueEstimate": None,
+        "revenueBeat": None,
+        "eps": None,
+        "epsEstimate": None,
+        "epsSurprisePercent": None,
+        "epsBeat": None,
+        "daysSinceReport": None,
+        "isBreaking": False,
+        "nextEarningsDate": None,
+        "nextEpsEstimate": None,
+        "revenueGrowthYoY": round(info.get("revenueGrowth", 0) * 100, 1) if info.get("revenueGrowth") else None,
+        "earningsGrowthYoY": round(info.get("earningsGrowth", 0) * 100, 1) if info.get("earningsGrowth") else None,
+        "operatingMargins": round(info.get("operatingMargins", 0) * 100, 1) if info.get("operatingMargins") else None,
+        "totalRevenueTTM": round(info.get("totalRevenue", 0) / 1e9, 1) if info.get("totalRevenue") else None,
+        "keyTakeaway": "",
+    }
+
+    # 1. Official Earnings Dates & Reported EPS vs Estimate
+    try:
+        ed = stock.earnings_dates
+        if ed is not None and not ed.empty:
+            reported = ed[ed["Reported EPS"].notna()]
+            if not reported.empty:
+                latest_ts = reported.index[0]
+                latest_row = reported.iloc[0]
+                rep_dt = latest_ts.to_pydatetime()
+                
+                # Dynamic Quarter naming (e.g., Oct report = Q3, Feb report = Q4, etc.)
+                m = rep_dt.month
+                y = rep_dt.year
+                if m in [1, 2, 3]:
+                    q_name = f"{y - 1} Q4"
+                elif m in [4, 5, 6]:
+                    q_name = f"{y} Q1"
+                elif m in [7, 8, 9]:
+                    q_name = f"{y} Q2"
+                else:
+                    q_name = f"{y} Q3"
+
+                days_diff = (now.date() - rep_dt.date()).days
+                rep_eps = round(float(latest_row["Reported EPS"]), 2)
+                est_eps = round(float(latest_row["EPS Estimate"]), 2) if pd.notna(latest_row.get("EPS Estimate")) else None
+                surprise = round(float(latest_row["Surprise(%)"]), 2) if pd.notna(latest_row.get("Surprise(%)")) else None
+
+                res["hasData"] = True
+                res["quarter"] = q_name
+                res["reportDate"] = rep_dt.strftime("%Y-%m-%d")
+                res["eps"] = rep_eps
+                res["epsEstimate"] = est_eps
+                res["epsSurprisePercent"] = surprise
+                res["epsBeat"] = (surprise >= 0) if surprise is not None else (rep_eps >= est_eps if est_eps else True)
+                res["daysSinceReport"] = max(0, days_diff)
+                res["isBreaking"] = days_diff <= 14  # Breaking alert if within 14 days of release
+            
+            # Next upcoming earnings date
+            upcoming = ed[ed["Reported EPS"].isna()]
+            if not upcoming.empty:
+                next_ts = upcoming.index[-1]
+                next_dt = next_ts.to_pydatetime()
+                res["nextEarningsDate"] = next_dt.strftime("%Y-%m-%d")
+                res["nextEpsEstimate"] = round(float(upcoming.iloc[-1]["EPS Estimate"]), 2) if pd.notna(upcoming.iloc[-1].get("EPS Estimate")) else None
+    except Exception as e:
+        print(f"[{info.get('symbol', 'TICKER')}] earnings_dates extraction note: {e}")
+
+    # 2. Calendar fallback for next earnings date
+    if not res.get("nextEarningsDate"):
+        try:
+            cal = stock.calendar
+            if cal and "Earnings Date" in cal and cal["Earnings Date"]:
+                res["nextEarningsDate"] = str(cal["Earnings Date"][0])
+            if cal and "Earnings Average" in cal and cal["Earnings Average"]:
+                res["nextEpsEstimate"] = round(float(cal["Earnings Average"]), 2)
+        except Exception:
+            pass
+
+    # 3. Dynamic Revenue from quarterly income stmt or info
+    try:
+        qi = stock.quarterly_income_stmt
+        if qi is not None and not qi.empty and "Total Revenue" in qi.index:
+            valid_cols = [c for c in qi.columns if pd.notna(qi.loc["Total Revenue", c])]
+            if valid_cols:
+                latest_col = valid_cols[0]
+                q_rev = qi.loc["Total Revenue", latest_col]
+                if q_rev and q_rev > 0:
+                    res["revenue"] = round(float(q_rev) / 1e9, 1)
+                
+                # If 4 quarters ago exists, compute exact YoY
+                if len(valid_cols) >= 5 and pd.notna(qi.loc["Total Revenue", valid_cols[4]]):
+                    prev_rev = qi.loc["Total Revenue", valid_cols[4]]
+                    if prev_rev and prev_rev > 0:
+                        res["revenueYoY"] = round(((q_rev - prev_rev) / prev_rev) * 100, 1)
+    except Exception:
+        pass
+
+    if res["revenue"] is None and res.get("totalRevenueTTM"):
+        # Approximate recent quarter from TTM / 4
+        res["revenue"] = round(res["totalRevenueTTM"] / 4, 1)
+    if res["revenueYoY"] is None:
+        res["revenueYoY"] = res.get("revenueGrowthYoY")
+
+    # 4. Generate dynamic takeaway summary
+    beat_str = "예상 상회(Beat)" if res.get("epsBeat") else "예상 하회(Miss)"
+    rev_str = f"분기 매출 ${res.get('revenue', 0)}B(+{res.get('revenueYoY', 0)}%)" if res.get("revenue") else f"연간 매출 ${res.get('totalRevenueTTM', 0)}B"
+    next_str = f"차기 실적 발표는 {res.get('nextEarningsDate')}로 예정되어 있습니다." if res.get("nextEarningsDate") else ""
+    res["keyTakeaway"] = f"{res.get('quarter')} 공식 실적 기준 {rev_str}, 주당순이익(EPS) ${res.get('eps', 0)} ({beat_str})를 기록했습니다. 영업이익률 {res.get('operatingMargins', 0)}% 수준의 본업 수익성을 유지하고 있으며, {next_str}"
+
+    return res
 
 def calculate_indicators(df):
     """Computes Wilder's RSI and MFI matching TradingView standard."""
@@ -274,8 +366,10 @@ def collect_ticker(ticker: str):
     except Exception as e:
         print(f"[{ticker}] 1d history warning: {e}")
 
-    # Attach Q3 Earnings Flash
-    info["earningsFlash"] = OFFICIAL_EARNINGS_FLASH
+    # Attach Dynamic Official Earnings Brief
+    earnings_brief = extract_dynamic_earnings(stock, info)
+    info["earningsFlash"] = earnings_brief
+    info["earningsBrief"] = earnings_brief
 
     output_path = os.path.join(PUBLIC_DATA_DIR, f"{ticker}.json")
     result = {
@@ -284,7 +378,8 @@ def collect_ticker(ticker: str):
             "last_updated": datetime.now(ZoneInfo("America/New_York")).isoformat(),
         },
         "fundamentals": info,
-        "earnings_flash": OFFICIAL_EARNINGS_FLASH,
+        "earnings_flash": earnings_brief,
+        "earnings_brief": earnings_brief,
         "candles": candles,
     }
 

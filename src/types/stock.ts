@@ -12,30 +12,38 @@ export interface Candle {
 
 export interface EarningsFlash {
   quarter: string; // e.g. "2026 Q3"
-  reportDate: string; // "2026-10-28"
-  revenue: number; // 127.6 ($B)
-  revenueYoY: number; // 25.0 (%)
-  revenueEstimate: number; // 122.5 ($B)
-  revenueBeat: boolean;
-  eps: number; // 2.12
-  epsEstimate: number; // 3.01
-  epsSurprisePercent: number; // -29.5 (%)
-  epsBeat: boolean;
-  epsMissReason: string;
-  cloudRevenue: number; // 30.7 ($B)
-  cloudYoY: number; // 103.0 (%)
-  cloudOpIncome: number; // 11.1 ($B)
-  cloudOpMargin: number; // 36.2 (%)
-  youtubeRevenue: number; // 11.2 ($B)
-  youtubeYoY: number; // 9.0 (%)
-  searchRevenue: number; // 63.4 ($B)
-  searchYoY: number; // 12.0 (%)
-  capex: number; // 51.4 ($B)
-  capexYoY: number; // 114.2 (%)
-  fullYearCapexGuidance: string;
-  afterMarketPrice: number; // 292.50
-  afterMarketChangePercent: number; // -9.97
-  keyTakeaway: string;
+  reportDate?: string; // "2026-10-28"
+  revenue?: number; // ($B)
+  revenueYoY?: number; // (%)
+  revenueEstimate?: number; // ($B)
+  revenueBeat?: boolean;
+  eps?: number; // Reported EPS
+  epsEstimate?: number;
+  epsSurprisePercent?: number; // (%)
+  epsBeat?: boolean;
+  epsMissReason?: string;
+  cloudRevenue?: number; // ($B)
+  cloudYoY?: number; // (%)
+  cloudOpIncome?: number; // ($B)
+  cloudOpMargin?: number; // (%)
+  youtubeRevenue?: number; // ($B)
+  youtubeYoY?: number; // (%)
+  searchRevenue?: number; // ($B)
+  searchYoY?: number; // (%)
+  capex?: number; // ($B)
+  capexYoY?: number; // (%)
+  fullYearCapexGuidance?: string;
+  afterMarketPrice?: number;
+  afterMarketChangePercent?: number;
+  keyTakeaway?: string;
+  isBreaking?: boolean;
+  nextEarningsDate?: string;
+  nextEpsEstimate?: number;
+  daysSinceReport?: number;
+  operatingMargins?: number;
+  totalRevenueTTM?: number;
+  revenueGrowthYoY?: number;
+  earningsGrowthYoY?: number;
 }
 
 export interface StockFundamentals {

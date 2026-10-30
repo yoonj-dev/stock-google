@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import {
-  AlertCircle,
-  TrendingDown,
   TrendingUp,
   Cloud,
-  Cpu,
   ChevronDown,
   ChevronUp,
+  Calendar,
   Sparkles,
   Info,
 } from 'lucide-react';
@@ -16,62 +14,65 @@ interface EarningsFlashBannerProps {
   flash?: EarningsFlash;
 }
 
-const DEFAULT_FLASH: EarningsFlash = {
-  quarter: '2026 Q3',
-  reportDate: '2026-10-28',
-  revenue: 127.6,
-  revenueYoY: 25.0,
-  revenueEstimate: 122.5,
-  revenueBeat: true,
-  eps: 2.12,
-  epsEstimate: 3.01,
-  epsSurprisePercent: -29.5,
-  epsBeat: false,
-  epsMissReason: 'SpaceX 투자 지분 비현금성 미실현 평가손실 -$8.2B 반영 (본업 영업이익 $40.6B +30% 성장)',
-  cloudRevenue: 30.7,
-  cloudYoY: 103.0,
-  cloudOpIncome: 11.1,
-  cloudOpMargin: 36.2,
-  youtubeRevenue: 11.2,
-  youtubeYoY: 9.0,
-  searchRevenue: 63.4,
-  searchYoY: 12.0,
-  capex: 51.4,
-  capexYoY: 114.2,
-  fullYearCapexGuidance: '$195B ~ $205B (AI 기술 인프라 및 TPU 대량 배치)',
-  afterMarketPrice: 292.50,
-  afterMarketChangePercent: -9.97,
-  keyTakeaway:
-    '본업(클라우드 +103% 폭발적 성장, 검색 +12%)은 역대급 호실적을 달성했으나, 공격적인 AI CapEx($51.4B)와 SpaceX 평가손(-$8.2B)으로 인한 회계상 EPS 미스가 장외 투매를 유발함. 본업 펀더멘털은 견고함.',
-};
-
-export const EarningsFlashBanner: React.FC<EarningsFlashBannerProps> = ({ flash = DEFAULT_FLASH }) => {
+export const EarningsFlashBanner: React.FC<EarningsFlashBannerProps> = ({ flash }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
 
+  if (!flash || !flash.quarter) {
+    return null;
+  }
+
+  // Dynamic breaking status: Breaking alert if within 14 days of release
+  const isBreaking = flash.isBreaking ?? ((flash.daysSinceReport ?? 999) <= 14);
+
+  const revDisplay = flash.revenue != null ? `$${flash.revenue}B` : (flash.totalRevenueTTM != null ? `$${flash.totalRevenueTTM}B` : '-');
+  const epsDisplay = flash.eps != null ? `$${flash.eps.toFixed(2)}` : '-';
+  const surpriseStr = flash.epsSurprisePercent != null ? `${flash.epsSurprisePercent >= 0 ? '+' : ''}${flash.epsSurprisePercent.toFixed(1)}%` : null;
+
   return (
-    <div className="w-full rounded-2xl bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-indigo-500/10 dark:from-amber-500/15 dark:via-rose-500/15 dark:to-indigo-500/15 border border-amber-500/30 dark:border-amber-400/30 p-3.5 sm:p-4 shadow-sm transition-all duration-200">
+    <div className={`w-full rounded-2xl transition-all duration-200 border p-3.5 sm:p-4 shadow-sm ${
+      isBreaking
+        ? 'bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-indigo-500/10 dark:from-amber-500/15 dark:via-rose-500/15 dark:to-indigo-500/15 border-amber-500/30 dark:border-amber-400/30'
+        : 'bg-slate-50 dark:bg-zinc-900/60 border-slate-200 dark:border-zinc-800'
+    }`}>
       {/* Top Header Summary Strip */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        {/* Left: Badge & Core Alert */}
+        {/* Left: Badge & Report Timing */}
         <div className="flex items-center gap-2.5 flex-wrap">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold text-xs border border-amber-500/30">
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-            <span>🚨 {flash.quarter} 실적 속보 (Earnings Flash)</span>
+          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-bold text-xs border ${
+            isBreaking
+              ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30'
+              : 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/20'
+          }`}>
+            {isBreaking ? (
+              <>
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+                <span>🚨 {flash.quarter} 실적 속보 (Earnings Flash)</span>
+              </>
+            ) : (
+              <>
+                <Calendar className="w-3.5 h-3.5 text-blue-500" />
+                <span>📊 {flash.quarter} 공식 실적 요약 (Official Earnings)</span>
+              </>
+            )}
           </span>
 
           <span className="text-[11px] text-slate-500 dark:text-zinc-400 font-medium">
-            10월 28일 장 마감 직후 발표 · 긴급 퀀트 브리핑
+            {flash.reportDate ? `${flash.reportDate} 공시` : '공식 데이터'}
+            {flash.daysSinceReport != null && flash.daysSinceReport <= 30 && ` (발표 ${flash.daysSinceReport}일 경과)`}
+            {flash.nextEarningsDate && ` · 차기 발표 예정: ${flash.nextEarningsDate}`}
           </span>
         </div>
 
-        {/* Right: Quick Metrics Strip & Toggle */}
+        {/* Right: Dynamic Metrics Strip & Toggle */}
         <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
           <div className="flex items-center gap-1.5 text-xs font-mono font-bold">
             <span className="px-2 py-0.5 rounded bg-white/80 dark:bg-zinc-800/80 text-emerald-600 dark:text-emerald-400 border border-slate-200/60 dark:border-zinc-700">
-              매출 $127.6B (+25% Beat)
+              매출 {revDisplay} {flash.revenueYoY != null && `(+${flash.revenueYoY}%)`}
             </span>
-            <span className="px-2 py-0.5 rounded bg-white/80 dark:bg-zinc-800/80 text-rose-600 dark:text-rose-400 border border-slate-200/60 dark:border-zinc-700">
-              장외 $292.50 (-9.97%)
+            <span className={`px-2 py-0.5 rounded bg-white/80 dark:bg-zinc-800/80 border border-slate-200/60 dark:border-zinc-700 ${
+              flash.epsBeat ? 'text-emerald-600 dark:text-emerald-400' : (flash.epsBeat === false ? 'text-rose-600 dark:text-rose-400' : 'text-slate-700 dark:text-zinc-300')
+            }`}>
+              EPS {epsDisplay} {surpriseStr && `(${surpriseStr})`}
             </span>
           </div>
 
@@ -94,101 +95,91 @@ export const EarningsFlashBanner: React.FC<EarningsFlashBannerProps> = ({ flash 
             <div className="p-3 rounded-xl bg-white/80 dark:bg-zinc-900/80 border border-slate-200/70 dark:border-zinc-800 space-y-1">
               <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-zinc-400">
                 <span>총 매출 (Revenue)</span>
-                <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono">
-                  Beat 🟢
+                <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${
+                  flash.revenueBeat ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400'
+                }`}>
+                  {flash.revenueBeat ? 'Beat 🟢' : '공식 공시'}
                 </span>
               </div>
               <div className="text-lg font-black font-mono text-slate-900 dark:text-white">
-                ${flash.revenue}B
+                {revDisplay}
               </div>
               <div className="text-[10.5px] text-emerald-600 dark:text-emerald-400 font-semibold font-mono">
-                +{flash.revenueYoY}% YoY (예상 ${flash.revenueEstimate}B)
+                {flash.revenueYoY != null ? `+${flash.revenueYoY}% YoY` : (flash.revenueGrowthYoY != null ? `+${flash.revenueGrowthYoY}% YoY` : '안정적 성장')}
+                {flash.revenueEstimate != null && ` (예상 $${flash.revenueEstimate}B)`}
               </div>
             </div>
 
-            {/* Card 2: Reported EPS & Miss Reason */}
+            {/* Card 2: Reported EPS & Surprise */}
             <div className="p-3 rounded-xl bg-white/80 dark:bg-zinc-900/80 border border-slate-200/70 dark:border-zinc-800 space-y-1">
               <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-zinc-400">
                 <span>주당순이익 (EPS)</span>
-                <span className="text-[10px] px-1.5 py-0.2 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400 font-mono">
-                  Miss 🔴
+                <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${
+                  flash.epsBeat ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : (flash.epsBeat === false ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400' : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400')
+                }`}>
+                  {flash.epsBeat ? 'Beat 🟢' : (flash.epsBeat === false ? 'Miss 🔴' : '컨센서스')}
                 </span>
               </div>
               <div className="text-lg font-black font-mono text-slate-900 dark:text-white">
-                ${flash.eps.toFixed(2)}
+                {epsDisplay}
               </div>
-              <div className="text-[10.5px] text-rose-600 dark:text-rose-400 font-semibold font-mono">
-                {flash.epsSurprisePercent}% vs 예상 ${flash.epsEstimate}
+              <div className="text-[10.5px] text-slate-500 dark:text-zinc-400 font-medium font-mono">
+                {surpriseStr ? `서프라이즈 ${surpriseStr}` : '월가 컨센서스 부합'}
+                {flash.epsEstimate != null && ` (예상 $${flash.epsEstimate.toFixed(2)})`}
               </div>
             </div>
 
-            {/* Card 3: Google Cloud (Historic Boom) */}
+            {/* Card 3: Operating Margins & Profitability */}
             <div className="p-3 rounded-xl bg-white/80 dark:bg-zinc-900/80 border border-slate-200/70 dark:border-zinc-800 space-y-1">
               <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-zinc-400">
                 <span className="flex items-center gap-1">
                   <Cloud className="w-3 h-3 text-blue-500" />
-                  Google Cloud
+                  영업이익률 (OPM)
                 </span>
                 <span className="text-[10px] px-1.5 py-0.2 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono font-bold">
-                  +103% 🚀
+                  본업 해자
                 </span>
               </div>
               <div className="text-lg font-black font-mono text-blue-600 dark:text-blue-400">
-                ${flash.cloudRevenue}B
+                {flash.operatingMargins != null ? `${flash.operatingMargins}%` : (flash.cloudOpMargin != null ? `${flash.cloudOpMargin}%` : '34.0%')}
               </div>
               <div className="text-[10.5px] text-slate-500 dark:text-zinc-400 font-medium font-mono">
-                영업익 ${flash.cloudOpIncome}B (마진 {flash.cloudOpMargin}%)
+                {flash.totalRevenueTTM != null ? `연간 매출 $${flash.totalRevenueTTM}B` : '견고한 현금 창출력'}
               </div>
             </div>
 
-            {/* Card 4: AI CapEx & Guidance */}
+            {/* Card 4: Next Earnings Schedule */}
             <div className="p-3 rounded-xl bg-white/80 dark:bg-zinc-900/80 border border-slate-200/70 dark:border-zinc-800 space-y-1">
               <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-zinc-400">
                 <span className="flex items-center gap-1">
-                  <Cpu className="w-3 h-3 text-purple-500" />
-                  설비투자 (CapEx)
+                  <Calendar className="w-3 h-3 text-indigo-500" />
+                  차기 실적 일정
                 </span>
-                <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 font-mono">
-                  +{flash.capexYoY}%
+                <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-mono">
+                  D-Day
                 </span>
               </div>
-              <div className="text-lg font-black font-mono text-purple-600 dark:text-purple-400">
-                ${flash.capex}B
+              <div className="text-base sm:text-lg font-black font-mono text-indigo-600 dark:text-indigo-400 truncate">
+                {flash.nextEarningsDate ?? '공시 예정'}
               </div>
               <div className="text-[10.5px] text-slate-500 dark:text-zinc-400 font-medium">
-                연간 가이던스 $200B 유지
+                {flash.nextEpsEstimate != null ? `차기 예상 EPS: $${flash.nextEpsEstimate}` : '월가 컨센서스 집계 중'}
               </div>
             </div>
           </div>
 
-          {/* Sub-Segments Summary Row */}
-          <div className="flex items-center gap-2 flex-wrap text-xs font-mono text-slate-600 dark:text-zinc-300">
-            <span className="px-2 py-1 rounded-lg bg-white/60 dark:bg-zinc-800/60 border border-slate-200/50 dark:border-zinc-700/60">
-              🔍 검색 매출: <strong className="text-slate-900 dark:text-white">${flash.searchRevenue}B (+{flash.searchYoY}% YoY)</strong>
-            </span>
-            <span className="px-2 py-1 rounded-lg bg-white/60 dark:bg-zinc-800/60 border border-slate-200/50 dark:border-zinc-700/60">
-              📺 YouTube 광고: <strong className="text-slate-900 dark:text-white">${flash.youtubeRevenue}B (+{flash.youtubeYoY}% YoY)</strong>
-            </span>
-            <span className="px-2 py-1 rounded-lg bg-white/60 dark:bg-zinc-800/60 border border-slate-200/50 dark:border-zinc-700/60">
-              ⚡ 클라우드 런레이트: <strong className="text-blue-600 dark:text-blue-400">$122.8B 돌파</strong>
-            </span>
-          </div>
-
-          {/* Institutional Diagnosis: Why did after-market dump -9.97%? */}
-          <div className="p-3 rounded-xl bg-white/90 dark:bg-zinc-900/90 border border-amber-500/25 dark:border-amber-400/25 space-y-1.5">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-300">
-              <Info className="w-3.5 h-3.5 shrink-0" />
-              <span>장외 급락($292.50, -9.97%) 핵심 원인 & 기관 팩트체크</span>
+          {/* Dynamic Institutional Diagnosis / Key Takeaway */}
+          {flash.keyTakeaway && (
+            <div className="p-3 rounded-xl bg-white/90 dark:bg-zinc-900/90 border border-slate-200/80 dark:border-zinc-800 space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-zinc-200">
+                <Info className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                <span>{flash.quarter} 공식 실적 퀀트 총평 & 시사점</span>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-zinc-300 leading-relaxed">
+                {flash.keyTakeaway}
+              </p>
             </div>
-
-            <p className="text-xs text-slate-600 dark:text-zinc-300 leading-relaxed">
-              <strong>1. EPS 미스의 실체:</strong> 본업 영업이익은 <strong>$40.6B(+30% YoY)</strong>로 사상 최대치를 기록했으나, 비영업 항목인 <strong>SpaceX 투자 지분 미실현 평가손실 -$8.2B</strong>가 장부상 반영되어 외형상 EPS($2.12)가 낮아진 비현금성 회계 왜곡입니다.
-              <br />
-              <strong>2. CapEx $51.4B 공포:</strong> 분기 설비투자가 2배 이상 폭증하며 단기 잉여현금흐름(FCF)이 일시적 -$9.1B로 위축된 점이 알고리즘 차익 실현을 촉발했습니다.
-              <br />
-              <strong>3. 기관 퀀트 결론:</strong> 클라우드 +103% 폭증과 마진 36.2% 도약은 역대 최강의 해자를 증명하며, 일회성 회계 충격에 따른 $300 하회 구간은 <strong>Forward P/E 18.8x의 강력한 저가 매수(Safety Margin) 기회</strong>로 분석됩니다.
-            </p>
-          </div>
+          )}
         </div>
       )}
     </div>

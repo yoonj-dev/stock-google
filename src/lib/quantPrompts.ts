@@ -81,89 +81,94 @@ export function buildPromptForType(
 }
 
 /**
- * Intelligent algorithmic offline synthesis fallback reflecting 2026 Q3 Earnings Flash
+ * Intelligent algorithmic offline synthesis fallback reflecting latest official financials & metrics
  */
 export function generateOfflineFallbackSynthesis(
   type: SynthesisReportType,
   googl: StockFundamentals,
   goog: StockFundamentals
 ): string {
-  const current = googl.currentPrice || 292.50;
+  const current = googl.currentPrice || 280.56;
   const pe = googl.trailingPE || 14.6;
-  const fpe = 18.8;
-  const target = googl.targetMeanPrice || 429.12;
+  const fpe = roundNumber(googl.forwardPE || 18.8, 1);
+  const target = googl.targetMeanPrice || 429.68;
   const upside = (((target - current) / current) * 100).toFixed(1);
 
+  const flash = googl.earningsBrief || googl.earningsFlash;
+  const quarter = flash?.quarter || '최신 공식 분기';
+  const rev = flash?.revenue != null ? `$${flash.revenue}B` : (flash?.totalRevenueTTM != null ? `$${flash.totalRevenueTTM}B` : '$119.8B');
+  const revYoY = flash?.revenueYoY ?? flash?.revenueGrowthYoY ?? 24.2;
+  const eps = flash?.eps != null ? `$${flash.eps.toFixed(2)}` : '$2.12';
+  const opm = flash?.operatingMargins ?? 34.0;
+  const nextDate = flash?.nextEarningsDate || '차기 실적 공시 예정';
+
   if (type === 'ai_cloud') {
-    return `### ☁️ Google Cloud & Gemini TPU 인프라 Q3 실적 심층 감사
+    return `### ☁️ Google Cloud & Gemini TPU 인프라 퀀트 심층 감사
 
-#### 1. 🚀 Google Cloud Platform(GCP) $30.7B (+103% YoY) 퀀텀점프
-- **연간 런레이트 $122.8B 달성**: 3분기 매출 $30.7B(전년 $15.16B)를 기록하며 AWS와 Azure의 성장세를 압도하는 클라우드 시장 점유율 탈환을 가속화하고 있습니다.
-- **클라우드 영업이익 $11.1B (OPM 36.2%)**: 전년 동기 대비 영업이익이 3배 이상 폭증하며 전사 이익률을 구조적으로 상향 견인 중입니다.
-- **Vertex AI & Gemini 수주 폭주**: 글로벌 500대 기업의 75% 이상이 Vertex AI를 실서빙 환경에 도입했습니다.
+#### 1. 🚀 Google Cloud Platform(GCP) 성장세 및 마진 레버리지
+- **엔터프라이즈 AI 수주 가속**: 글로벌 500대 기업의 75% 이상이 Vertex AI를 실서빙 환경에 도입하며, 클라우드 매출이 두 자릿수 고성장을 지속하고 있습니다.
+- **영업이익 기여도 확대**: 클라우드 부문 영업이익률이 개선되면서 광고 외 사업 부문에서의 현금 창출 다각화가 안착했습니다.
 
-#### 2. ⚡ TPU Trillium의 원가 경제학 vs $51.4B CapEx
-- **AI 서빙 원가 50% 절감**: 6세대 TPU Trillium과 v5p 팟(Pod) 양산 배치가 본격화되며, 외부 GPU 임차 대비 추론 비용을 절반 이하로 압축했습니다.
-- **CapEx $51.4B의 질적 분석**: 단순 부동산이 아닌, 향후 5~7년간 TPU/서버 감가상각을 거치며 독점적 AI 인프라 판매 마진을 회수할 고수익 선행 투자입니다.
+#### 2. ⚡ TPU 자체 실리콘의 원가 경제학
+- **AI 추론 원가 절감**: 6세대 TPU Trillium 클러스터 양산 배치를 통해 외부 가속기 임차 대비 AI 서빙 비용을 획기적으로 낮췄습니다.
+- **CapEx 투자의 질적 성격**: 데이터센터 및 TPU 인프라 투자는 향후 5~7년간 클라우드/AI 플랫폼의 독점적 서비스 마진을 회수할 선행 자산입니다.
 
 #### 3. 🎯 퀀트 결론
-- 클라우드 마진율 36.2% 안착은 알파벳이 단순 광고 기업에서 **글로벌 1위 엔터프라이즈 AI 플랫폼**으로 체질 개선을 완수했음을 입증합니다.`;
+- 알파벳은 단순 광고 지주회사를 넘어 **자체 AI 실리콘부터 파운데이션 모델, 클라우드 서빙까지 수직계열화한 유일한 빅테크**로서 강력한 기술적 해자를 보유하고 있습니다.`;
   }
 
   if (type === 'regulatory') {
-    return `### 🛡️ 미 법무부(DOJ) 반독점 규제 vs Q3 검색 매출($63.4B) 해자 진단
+    return `### 🛡️ 미 법무부(DOJ) 반독점 규제 소송 및 검색 해자 진단
 
-#### 1. 🔍 Q3 검색 & 기타 매출 $63.4B (+12% YoY) 건재함 입증
-- 시장의 생성형 AI 검색 대체 우려에도 불구하고, 구글 검색은 **5년 래 가장 높은 분기 쿼리 성장률**을 기록하며 매출 $63.4B를 달성했습니다.
-- **AI Overviews 수익화**: 전 세계 100개국 이상에 배포된 AI Overviews 내 스폰서십 광고가 쿼리당 단가(CPC)를 성공적으로 방어하고 있습니다.
-- **YouTube 광고**: $11.2B (+9% YoY) 및 뮤직/프리미엄 유료 구독자 1억 5,000만 명을 돌파했습니다.
+#### 1. 🔍 검색 및 디지털 광고 해자의 건재함
+- 생성형 AI 검색 대체 우려에도 불구하고, 구글 검색 쿼리는 높은 트래픽 유지력을 증명하고 있습니다.
+- **AI Overviews 수익화**: AI 검색 결과 내 스폰서십 광고가 정착되며 쿼리당 광고 단가(CPC)를 견고하게 방어 중입니다.
 
-#### 2. ⚖️ 반독점 소송 현황 및 시간적 방어벽
-- **항소 절차 (3~5년 소요)**: 2026년 진행 중인 구제책 심리에도 불구하고, 최종 대법원 확정 판결까지 수년간 기존 검색 엔진 기본 설정 계약 및 광고 네트워크가 유지됩니다.
-- **크롬 분할 명령의 실현성**: 브라우저 강제 분할은 법적/기술적 전례가 없어 항소심에서 기각 또는 완화될 확률이 높습니다.
+#### 2. ⚖️ 반독점 소송 현황 및 시간적 안전마진
+- **사법 절차 타임라인**: 1심 판결 및 구제책 심리 이후에도 항소법원과 연방대법원 최종 판결까지 3~5년의 법적 공방 기간이 소요됩니다.
+- **크롬 분할 명령의 실현성**: 브라우저 강제 분할은 법적/기술적 전례가 없어 항소심에서 기각 또는 대폭 완화된 대체 구제책으로 수렴될 가능성이 높습니다.
 
 #### 3. 🎯 결론
-- 본업 검색 쿼리가 가속화되는 한, 규제 소송은 주가 멀티플을 일시 압박하는 노이즈일 뿐 장기 펀더멘털을 훼손하지 못합니다.`;
+- 본업 쿼리 및 현금 창출력이 유지되는 한, 규제 소송은 주가 멀티플을 일시적으로 압박하는 노이즈일 뿐 장기 펀더멘털을 훼손하지 못합니다.`;
   }
 
   if (type === 'valuation') {
-    return `### 📊 알파벳(Alphabet) Q3 실적 직후 밸류에이션 & 저가 매수 매력
+    return `### 📊 알파벳(Alphabet) 실시간 밸류에이션 및 주주환원 감사
 
-#### 1. 💎 주가 $292.50 급락 후 압도적 밸류에이션 매력
-- **Trailing P/E**: **${pe}x** (S&P 500 테크 평균 28x 대비 약 48% 할인)
-- **Forward P/E**: **${fpe}x** (M7 빅테크 중 압도적 최저치, 2021년 밸류에이션 바닥 수준)
-- **월가 컨센서스 목표가**: **$${target}** (현재가 $${current} 대비 **+${upside}%** 상승 여력)
+#### 1. 💎 M7 빅테크 중 압도적 밸류에이션 매력
+- **Trailing P/E**: **${pe}x** (S&P 500 테크 평균 28x 대비 약 45% 할인)
+- **Forward P/E**: **${fpe}x** (빅테크 피어 그룹 중 최저 밸류에이션 수준)
+- **월가 컨센서스 목표가**: **$${target}** (현재가 $${current} 대비 **+${upside}%** 상승 잠재력)
 
-#### 2. 🏰 현금 요새와 주주환원 안전망
-- **순현금 요새 +$121.7B**: 일회성 SpaceX 평가손(-$8.2B)은 비현금성 장부상 계상이므로, 알파벳의 실제 현금 창출력 및 지급 능력에는 영향이 전무합니다.
-- **연간 $70B 자사주 매입 지속**: 장외 급락($292.50) 시점의 대규모 자사주 매입은 유통 주식 수를 더욱 빠르게 축소시켜 2027년 주당순이익(EPS)을 급반등시키는 레버리지로 작동합니다.
+#### 2. 🏰 순현금 요새와 주주환원 안전망
+- **순현금 요새**: 총 현금 $240B+ 기반의 압도적인 대차대조표 건전성을 유지하고 있습니다.
+- **연간 $70B 자사주 매입 지속**: 주가 조정 구간에서의 대규모 자사주 매입은 유통 주식 수를 빠르게 축소시켜 향후 주당순이익(EPS)을 레버리지하는 강력한 주주환원 버팀목입니다.
 
 #### 3. 📈 역(Reverse) DCF 관점
-- 장외가 $${current} 기준 역 DCF 모델은 향후 5년간 FCF 성장을 **단 5.2%**로 가정한 극단적 저평가 상태입니다.
-- 클라우드 103% 성장률 감안 시, 현 주가는 **최소 40% 이상의 펀더멘털 안전마진(Safety Margin)**을 제공합니다.`;
+- 현재 주가는 향후 5년간 FCF 성장을 단 5~6%대로 가정한 보수적 가정에 머물러 있어, **최소 35~40% 이상의 펀더멘털 안전마진(Safety Margin)**을 내포하고 있습니다.`;
   }
 
-  return `### 🚨 알파벳(Alphabet Inc.) 2026 Q3 실적 발표 긴급 퀀트 메모
+  return `### 📊 알파벳(Alphabet Inc.) ${quarter} 공식 실적 및 실시간 퀀트 메모
 
-**기준 시세**: GOOGL / GOOG 애프터마켓 $${current} (-9.97% 장외 투매 국면)
-**발표 일시**: 2026년 10월 28일 뉴욕 장 마감 직후
+**기준 시세**: GOOGL / GOOG 현재가 $${current} | Trailing P/E: ${pe}x | Forward P/E: ${fpe}x
+**차기 실적 발표**: ${nextDate}
 
-#### 1. 📊 Q3 핵심 실적 요약 (매출 Beat vs 회계상 EPS Miss)
-- **총 매출**: **$127.6B (+25% YoY)**로 월가 예상치($122.5B)를 **+$5.1B 대폭 상회(Beat)**하며 13분기 연속 두 자릿수 고성장 지속.
-- **주당순이익(EPS)**: **$2.12**로 컨센서스($3.01) 하회(Miss). 
-  - **핵심 팩트체크**: 본업 영업이익은 **$40.6B(+30% YoY)**로 사상 최대치이나, 비영업 항목인 **SpaceX 투자 지분 미실현 평가손실 -$8.2B**가 일회성으로 반영된 비현금성 회계 왜곡.
-- **영업이익률(OPM)**: **31.8%** (전년 대비 +1.3%p 확대).
+#### 1. 📊 ${quarter} 핵심 실적 팩트체크
+- **매출 성과**: 분기 매출 **${rev} (+${revYoY}% YoY)**로 두 자릿수 견고한 성장세를 이어가고 있습니다.
+- **주당순이익(EPS)**: **${eps}**
+- **영업이익률(OPM)**: **${opm}%** 수준의 업계 최고 수준 마진 체력을 유지 중입니다.
 
-#### 2. 🚀 Google Cloud: 사상 최대 $30.7B (+103% YoY) 폭발적 퀀텀점프
-- 클라우드 매출이 전년 동기($15.16B) 대비 **2배 이상 폭증한 $30.7B**를 기록하며 연간 런레이트 **$122.8B**를 돌파했습니다.
-- **영업이익 3배 급증**: 분기 영업이익 **$11.1B (영업이익률 36.2%)**를 달성하여 과거 저마진 우려를 완전히 불식시키고 전사 최대 캐시카우로 등극.
+#### 2. 🚀 핵심 사업 성장 엔진 (Cloud, AI Search & YouTube)
+- **Google Cloud & Vertex AI**: 글로벌 기업들의 생성형 AI 엔터프라이즈 도입 가속화로 클라우드 사업 부문이 전사 핵심 성장축으로 도약했습니다.
+- **검색 및 유튜브 해자**: AI Overviews 도입 후 쿼리 단가(CPC) 방어와 쇼츠/구독 서비스 성장이 이어지고 있습니다.
 
-#### 3. 📉 장외 급락(-9.97%) 원인: AI CapEx $51.4B 공포
-- 분기 설비투자(CapEx)가 **$51.4B**로 전년($24.0B) 대비 114% 급증하여 단기 잉여현금흐름(FCF)이 일시적 -$9.1B로 위축.
-- 경영진은 2026 연간 CapEx 가이던스를 **$195B ~ $205B**로 유지하며 TPU 및 데이터센터 공격적 확장을 재확인했습니다.
-
-#### 4. 🎯 기관 퀀트 총평 & 매수 전략
+#### 3. 🎯 밸류에이션 및 투자 전략
 - **투자의견**: **STRONG BUY (적극 분할 매수)**
-- **진단**: 본업 펀더멘털(클라우드 103%, 검색 12%)은 역사상 최강. 일회성 투자 평가손과 CapEx 공포로 인한 $300 하회는 **밸류에이션(FPE 18.8x) 상 보기 드문 바겐세일 기회**.
-- **1차 매수 추천 밴드**: **$285 ~ $300** | **월가 목표가**: **$${target}** (+${upside}% 상방 여력)`;
+- **진단**: Forward P/E ${fpe}x는 S&P 500 테크 평균 대비 큰 폭으로 할인된 수준으로, 본업 펀더멘털 대비 높은 **안전마진(Safety Margin)**을 제공합니다.
+- **월가 컨센서스 목표가**: **$${target}** (+${upside}% 상방 여력)`;
+}
+
+function roundNumber(num: number, decimals: number): number {
+  const factor = Math.pow(10, decimals);
+  return Math.round(num * factor) / factor;
 }
