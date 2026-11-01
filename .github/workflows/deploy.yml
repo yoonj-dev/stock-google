@@ -31,14 +31,6 @@ jobs:
       - name: Build React / Vite Web Application
         run: npm run build
 
-      - name: Deploy to gh-pages branch (Auto-deploy source for Cloudflare Pages)
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: gh-pages
-          force_orphan: true
-
       - name: Deploy to Cloudflare via Wrangler Direct Upload
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
         uses: cloudflare/wrangler-action@v3
