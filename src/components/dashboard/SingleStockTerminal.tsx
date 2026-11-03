@@ -44,7 +44,6 @@ export const SingleStockTerminal: React.FC<SingleStockTerminalProps> = ({
   onRefresh,
 }) => {
   const [activeTab, setActiveTab] = useState<WorkspaceTabId>('ai_memo');
-  const [activeAiQuestion, setActiveAiQuestion] = useState<string | undefined>(undefined);
 
   const currentStock = activeTicker === 'GOOGL' ? googl : goog;
 
@@ -180,8 +179,6 @@ export const SingleStockTerminal: React.FC<SingleStockTerminalProps> = ({
             <LocalLlmSynthesizer
               googl={googl}
               goog={goog}
-              externalQuestion={activeAiQuestion}
-              onQuestionHandled={() => setActiveAiQuestion(undefined)}
             />
           </section>
 
@@ -285,10 +282,6 @@ export const SingleStockTerminal: React.FC<SingleStockTerminalProps> = ({
           <QuantInsightDock
             profile={profile}
             fundamentals={currentStock}
-            onSelectAiQuestion={(q: string) => {
-              setActiveAiQuestion(q);
-              scrollToSection('ai_memo', 'section-ai-memo');
-            }}
             onOpenTab={(tabId: WorkspaceTabId) => {
               const matched = TABS.find((t) => t.id === tabId);
               if (matched) scrollToSection(matched.id, matched.domId);

@@ -21,41 +21,73 @@ export async function fetchSynthesisData(): Promise<LlmSynthesisData | null> {
 export async function fetchStockData(symbol: 'GOOGL' | 'GOOG'): Promise<StockData> {
   const fallback = symbol === 'GOOGL' ? MOCK_GOOGL_DATA : MOCK_GOOG_DATA;
 
-  // 1. Try local static data first (instant & resilient)
+  // 1. Fetch live market summary from stock-api (Ground Truth)
+  let liveQuote: any = null;
+  try {
+    const sumRes = await fetch(`${STOCK_API_BASE}/market_summary.json?t=${Date.now()}`);
+    if (sumRes.ok) {
+      const sumData = await sumRes.json();
+      liveQuote = sumData?.summary?.[symbol];
+    }
+  } catch (err) {
+    console.warn(`[stockApi] Failed to fetch live quote for ${symbol}:`, err);
+  }
+
+  // 2. Try local static data first (instant & resilient)
+  let data: StockData | null = null;
   try {
     const localRes = await fetch(`/data/${symbol}.json?t=${Date.now()}`);
     if (localRes.ok) {
       const localData: StockData = await localRes.json();
       if (localData?.fundamentals?.currentPrice) {
-        return localData;
+        data = localData;
       }
     }
   } catch {
     // Continue to remote API
   }
 
-  // 2. Try remote stock-api
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
-    const res = await fetch(`${STOCK_API_BASE}/data/${symbol}.json?t=${Date.now()}`, {
-      signal: controller.signal,
-      headers: { Accept: 'application/json' },
-    });
-    clearTimeout(timeoutId);
+  // 3. Try remote stock-api if local not available
+  if (!data) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const res = await fetch(`${STOCK_API_BASE}/data/${symbol}.json?t=${Date.now()}`, {
+        signal: controller.signal,
+        headers: { Accept: 'application/json' },
+      });
+      clearTimeout(timeoutId);
 
-    if (res.ok) {
-      const data: StockData = await res.json();
-      if (data?.fundamentals?.currentPrice) {
-        return data;
+      if (res.ok) {
+        const remoteData: StockData = await res.json();
+        if (remoteData?.fundamentals?.currentPrice) {
+          data = remoteData;
+        }
       }
+    } catch (err) {
+      console.warn(`[stockApi] Network error for ${symbol}, utilizing cached fallback.`, err);
     }
-  } catch (err) {
-    console.warn(`[stockApi] Network error for ${symbol}, utilizing cached fallback.`, err);
   }
 
-  // 3. Fallback snapshot
-  return fallback;
+  if (!data) {
+    data = fallback;
+  }
+
+  // 4. Synchronize live price metrics from single source of truth (market_summary)
+  if (liveQuote && data?.fundamentals) {
+    data.fundamentals.currentPrice = liveQuote.currentPrice;
+    data.fundamentals.regularMarketPrice = liveQuote.currentPrice;
+    data.fundamentals.regularLastPrice = liveQuote.currentPrice;
+    if (liveQuote.previousClose != null) data.fundamentals.previousClose = liveQuote.previousClose;
+    if (liveQuote.change != null) data.fundamentals.change = liveQuote.change;
+    if (liveQuote.changePercent != null) data.fundamentals.changePercent = liveQuote.changePercent;
+    if (liveQuote.marketState) data.fundamentals.marketState = liveQuote.marketState;
+    if (liveQuote.dayHigh != null) data.fundamentals.dayHigh = liveQuote.dayHigh;
+    if (liveQuote.dayLow != null) data.fundamentals.dayLow = liveQuote.dayLow;
+    if (liveQuote.open != null) data.fundamentals.open = liveQuote.open;
+  }
+
+  return data;
 }
 
 export async function fetchIndices(): Promise<Record<string, any>> {
