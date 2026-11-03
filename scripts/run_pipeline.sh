@@ -1,1 +1,1 @@
-collect_alphabet_market_data_pipeline.sh
+stock_google_collect_market_data.sh
